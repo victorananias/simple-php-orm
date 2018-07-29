@@ -10,10 +10,12 @@
 	</style>
 	</head>
 	<body>
-		<header>
-			<h1>
-				<?= $cumprimento ?>
-			</h1>
-		</header>
+		<ul>
+            <?php foreach($animais as $animal): ?>
+                <li>
+                    <?= $animal; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
 	</body>
 </html>

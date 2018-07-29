@@ -1,6 +1,12 @@
 <?php
 
 
-$cumprimento = "Hello, ".htmlspecialchars($_GET['nome']);
+$animais = [
+	"Cobra",
+	"Cabra",
+	"Onça",
+	"Cachorro",
+	"Gato"
+];
 
 require "index.view.php";
