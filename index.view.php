@@ -11,9 +11,9 @@
 	</head>
 	<body>
 		<ul>
-            <?php foreach($animais as $animal): ?>
+            <?php foreach($tarefa as $info => $value): ?>
                 <li>
-                    <?= $animal; ?>
+					<strong><?= $info; ?></strong>: <?= $value; ?>
                 </li>
             <?php endforeach; ?>
         </ul>
