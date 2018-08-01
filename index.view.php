@@ -11,11 +11,18 @@
 	</head>
 	<body>
 		<ul>
-            <?php foreach($tarefa as $info => $value): ?>
-                <li>
-					<strong><?= $info; ?></strong>: <?= $value; ?>
-                </li>
-            <?php endforeach; ?>
+			<li>
+				<strong>Título: </strong>: <?= $tarefa['titulo']; ?>
+			</li>
+			<li>
+				<strong>Descrição: </strong>: <?= $tarefa['descricao']; ?>
+			</li>
+			<li>
+				<strong>Responsável: </strong>: <?= ucfirst($tarefa['responsavel']); ?>
+			</li>
+			<li>
+				<strong>Status: </strong>: <?= $tarefa['completa'] ? "Completa" : "Incompleta"; ?>
+			</li>
         </ul>
 	</body>
 </html>
