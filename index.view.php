@@ -11,23 +11,15 @@
 	</head>
 	<body>
 		<ul>
-			<li>
-				<strong>Título: </strong>: <?= $tarefa['titulo']; ?>
-			</li>
-			<li>
-				<strong>Descrição: </strong>: <?= $tarefa['descricao']; ?>
-			</li>
-			<li>
-				<strong>Responsável: </strong>: <?= ucfirst($tarefa['responsavel']); ?>
-			</li>
-			<li>
-				<strong>Status: </strong>
-				<?php if($tarefa['completa']): ?>
-					<span>&#9745;</span>
-				<?php else: ?>
-					<span>&#9746;</span>
-				<?php endif; ?>
-			</li>
+			<?php foreach($tarefas as $tarefa): ?>
+				<li>
+					<?php if($tarefa->foiCompleta()): ?>
+						<strike><?= $tarefa->descricao; ?></strike>
+					<?php else: ?>
+						<?= $tarefa->descricao; ?>
+					<?php endif; ?>
+				</li>
+			<?php endforeach; ?>
         </ul>
 	</body>
 </html>

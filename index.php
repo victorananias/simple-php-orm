@@ -2,13 +2,30 @@
 
 require('functions.php');
 
-$tarefa = [
-	"titulo" => "Angular 2", 
-	"descricao" => "Estudar Angular 2.", 
-	"responsavel"  => "victor", 
-	"completa" => true
+class Tarefa {
+	public $completa = false;
+
+	public function __construct($descricao) {
+		$this->descricao = $descricao;
+	}
+
+	public function completar() {
+		$this->completa = true;
+	}
+
+	public function foiCompleta() {
+		return $this->completa;
+	}
+}
+
+$tarefas = [
+	new Tarefa("Estudar Angular 2"),
+	new Tarefa("Estudar PHP"),
+	new Tarefa("Estudar Laravel")
 ];
 
-dd($tarefa);
+$tarefas[0]->completar();
+$tarefas[1]->completar();
+
 
 require "index.view.php";
