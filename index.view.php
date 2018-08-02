@@ -21,7 +21,12 @@
 				<strong>Responsável: </strong>: <?= ucfirst($tarefa['responsavel']); ?>
 			</li>
 			<li>
-				<strong>Status: </strong>: <?= $tarefa['completa'] ? "Completa" : "Incompleta"; ?>
+				<strong>Status: </strong>
+				<?php if($tarefa['completa']): ?>
+					<span>&#9745;</span>
+				<?php else: ?>
+					<span>&#9746;</span>
+				<?php endif; ?>
 			</li>
         </ul>
 	</body>
