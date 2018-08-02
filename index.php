@@ -1,5 +1,6 @@
 <?php
 
+require('functions.php');
 
 $tarefa = [
 	"titulo" => "Angular 2", 
@@ -7,5 +8,7 @@ $tarefa = [
 	"responsavel"  => "victor", 
 	"completa" => true
 ];
+
+dd($tarefa);
 
 require "index.view.php";
