@@ -7,6 +7,6 @@ CREATE TABLE tarefas(
     completa boolean
 );
 
-INSERT INTO tarefas(descricao, completa) VALUES('Revisar php básico.', false);
+INSERT INTO tarefas(descricao, completa) VALUES('Revisar php básico.', true);
 INSERT INTO tarefas(descricao, completa) VALUES('Revisar javascript básico.', false);
 INSERT INTO tarefas(descricao, completa) VALUES('Estudar Angular.', false);

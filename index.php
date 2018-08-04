@@ -1,13 +1,15 @@
 <?php
 
-require 'functions.php';
+$qb = require "bootstrap.php";
 require 'Tarefa.php';
 
-$pdo = getPDO();
+$tarefas = $qb->selectAll("tarefas");
 
-$statement = $pdo->prepare("select * from tarefas;");
-$statement->execute();
-
-$tarefas = $statement->fetchAll(PDO::FETCH_CLASS, "Tarefa");
+$tarefas = array_map(function($tarefa) {
+  $t = new Tarefa();
+  $t->descricao = $tarefa->descricao;
+  $t->completa = $tarefa->completa;
+  return $t;
+}, $tarefas);
 
 require "index.view.php";
