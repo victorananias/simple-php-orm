@@ -2,9 +2,13 @@
 
 class Conexao {
 
-  public static function iniciar() {
+  public static function iniciar($config) {
     try {
-        return new PDO("mysql:host=127.0.0.1;dbname=meubanco;charset=utf8", "user1", "user1");
+        return new PDO(
+          $config['connection'].";dbname=".$config['dbname'].";charset=".$config['charset'],
+          $config['username'],
+          $config['password']
+        );
     } catch(PDOException $exception) {
         die($exception->getMessage());
     }
