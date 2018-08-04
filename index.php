@@ -1,7 +1,9 @@
 <?php
 
-$qb = require "bootstrap.php";
+require "core/bootstrap.php";
 
-$tarefas = $qb->selectAll("tarefas");
+$router = new Router();
 
-require "index.view.php";
+require 'routes.php';
+
+require $router->direcionar(Request::uri());
