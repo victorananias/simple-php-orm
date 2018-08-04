@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-br" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
+<?php require "views/partials/head.php"; ?>
     <h2>Sobre nós</h2>
-  </body>
-</html>
+<?php require "views/partials/footer.php"; ?>
