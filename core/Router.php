@@ -1,17 +1,28 @@
 <?php
 
 class Router {
-  protected $routes = [];
+  protected $routes = [
+    'POST' => [],
+    'GET' => []
+  ];
 
   public static function carregar($arquivo) {
     $router = new self;
-    $router->routes = require($arquivo);
+    require $arquivo;
     return $router;
   }
 
-  public function direcionar($uri) {
-    if(array_key_exists($uri, $this->routes)) {
-      return $this->routes[$uri];
+  public function post($rota, $controller) {
+    $this->routes['POST'][$rota] = $controller;
+  }
+
+  public function get($rota, $controller) {
+    $this->routes['GET'][$rota] = $controller;
+  }
+
+  public function direcionar($uri, $requestType) {
+    if(array_key_exists($uri, $this->routes[$requestType])) {
+      return $this->routes[$requestType][$uri];
     }
     throw new Exception("URI solicitada não existe.");
   }
