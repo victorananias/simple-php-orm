@@ -2,8 +2,4 @@
 
 require "core/bootstrap.php";
 
-$router = new Router();
-
-require 'routes.php';
-
-require $router->direcionar(Request::uri());
+require Router::carregar('routes.php')->direcionar(Request::uri());

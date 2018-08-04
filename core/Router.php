@@ -3,8 +3,10 @@
 class Router {
   protected $routes = [];
 
-  public function registrar($rotas) {
-    $this->routes = $rotas;
+  public static function carregar($arquivo) {
+    $router = new self;
+    $router->routes = require($arquivo);
+    return $router;
   }
 
   public function direcionar($uri) {

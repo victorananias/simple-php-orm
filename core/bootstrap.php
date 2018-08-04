@@ -1,13 +1,12 @@
 <?php
-
-$config = require 'config.php';
+$app = [];
+$app['config'] = require 'config.php';
 
 require 'core/database/Conexao.php';
 require 'core/database/QueryBuilder.php';
-
-$qb = new QueryBuilder(
-  Conexao::iniciar($config['database'])
-);
-
 require 'core/Request.php';
 require 'core/Router.php';
+
+$app['db']  = new QueryBuilder(
+  Conexao::iniciar($app['config']['database'])
+);
