@@ -1,5 +1,6 @@
 <?php
 
+require "vendor/autoload.php";
 require "core/bootstrap.php";
 
 require Router::carregar('routes.php')->direcionar(
