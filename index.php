@@ -1,31 +1,13 @@
 <?php
 
-require('functions.php');
+require 'functions.php';
+require 'Tarefa.php';
 
-class Tarefa {
-	public $completa = false;
+$pdo = getPDO();
 
-	public function __construct($descricao) {
-		$this->descricao = $descricao;
-	}
+$statement = $pdo->prepare("select * from tarefas;");
+$statement->execute();
 
-	public function completar() {
-		$this->completa = true;
-	}
-
-	public function foiCompleta() {
-		return $this->completa;
-	}
-}
-
-$tarefas = [
-	new Tarefa("Estudar Angular 2"),
-	new Tarefa("Estudar PHP"),
-	new Tarefa("Estudar Laravel")
-];
-
-$tarefas[0]->completar();
-$tarefas[1]->completar();
-
+$tarefas = $statement->fetchAll(PDO::FETCH_CLASS, "Tarefa");
 
 require "index.view.php";
