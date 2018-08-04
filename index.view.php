@@ -13,7 +13,7 @@
 		<ul>
 			<?php foreach($tarefas as $tarefa): ?>
 				<li>
-					<?php if($tarefa->foiCompleta()): ?>
+					<?php if($tarefa->completa): ?>
 						<strike><?= $tarefa->descricao; ?></strike>
 					<?php else: ?>
 						<?= $tarefa->descricao; ?>
