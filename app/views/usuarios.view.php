@@ -1,4 +1,4 @@
-<?php require "views/partials/head.php"; ?>
+<?php require "partials/head.php"; ?>
 
 <h3>Cadastrar Usuário</h3>
 <form action="/usuarios" method="POST">
@@ -14,4 +14,4 @@
     <?php endforeach; ?>
 </ul>
 
-<?php require "views/partials/footer.php"; ?>
+<?php require "partials/footer.php"; ?>

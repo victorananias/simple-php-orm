@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Core\Database;
+
+use \PDO;
+
 class Conexao {
 
     public static function iniciar($config) {

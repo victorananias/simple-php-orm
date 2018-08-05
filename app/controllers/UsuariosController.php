@@ -1,10 +1,14 @@
 <?php
 
+namespace App\Controllers;
+
+use App\Core\App;
+use App\Models\Usuario;
+
 class UsuariosController {
 
     public function index() {
-        $usuarios = App::get('db')->selectAll("usuarios");
-
+        $usuarios = App::get('db')->selectAll("usuarios", Usuario::class);
         /*
         |
         | compact()

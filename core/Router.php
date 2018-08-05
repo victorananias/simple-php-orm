@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Core;
+
 class Router {
     protected $routes = [
         'POST' => [],
@@ -45,6 +47,15 @@ class Router {
     }
 
     protected function executarAcao($controller, $metodo) {
+        /*
+        |
+        | \\
+        |
+        | caso seja usado somente um \ o php irá dar um "escaping":
+        | não irá ignorar os {}.
+        |
+        */
+        $controller = "App\\Controllers\\{$controller}";
         $controller = new $controller;
 
         if(!method_exists($controller, $metodo)) {

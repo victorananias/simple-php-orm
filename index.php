@@ -1,9 +1,12 @@
 <?php
 
 require "vendor/autoload.php";
+require "core/helpers.php";
 require "core/bootstrap.php";
 
-Router::carregar('routes.php')->direcionar(
+use App\Core\{Router, Request};
+
+Router::carregar('app/routes.php')->direcionar(
     Request::uri(), 
     Request::method()
 );
