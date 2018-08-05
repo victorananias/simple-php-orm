@@ -12,9 +12,11 @@ class ComposerStaticInit7af411bac7756e8562419bf7dd0e78b2
         'Composer\\Autoload\\ClassLoader' => __DIR__ . '/..' . '/composer/ClassLoader.php',
         'Composer\\Autoload\\ComposerStaticInit7af411bac7756e8562419bf7dd0e78b2' => __DIR__ . '/..' . '/composer/autoload_static.php',
         'Conexao' => __DIR__ . '/../..' . '/core/database/Conexao.php',
+        'PagesController' => __DIR__ . '/../..' . '/controllers/PagesController.php',
         'QueryBuilder' => __DIR__ . '/../..' . '/core/database/QueryBuilder.php',
         'Request' => __DIR__ . '/../..' . '/core/Request.php',
         'Router' => __DIR__ . '/../..' . '/core/Router.php',
+        'UsuariosController' => __DIR__ . '/../..' . '/controllers/UsuariosController.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

@@ -1,7 +1,7 @@
 <?php
 
-$router->get("", "controllers/index.php");
-$router->get("contato", "controllers/contato.php");
-$router->get("sobre", "controllers/sobre.php");
-$router->get("sobre/cultura", "controllers/sobre-cultura.php");
-$router->post("nomes", "controllers/add-nome.php");
+$router->get("", "PagesController@index");
+$router->get("contato", "PagesController@contato");
+$router->get("sobre", "PagesController@sobre");
+$router->get("usuarios", "UsuariosController@index");
+$router->post("usuarios", "UsuariosController@store");
