@@ -1,7 +1,7 @@
 <?php
-$app = [];
-$app['config'] = require 'config.php';
 
-$app['db']  = new QueryBuilder(
-  Conexao::iniciar($app['config']['database'])
-);
+App::bind('config', require 'config.php');
+
+App::bind('db', new QueryBuilder(
+  Conexao::iniciar(App::get('config')['database'])
+));
