@@ -1,7 +1,8 @@
 <?php
 
-$router->get("", "PagesController@index");
-$router->get("contato", "PagesController@contato");
-$router->get("sobre", "PagesController@sobre");
-$router->get("usuarios", "UsuariosController@index");
-$router->post("usuarios", "UsuariosController@store");
+$router->get("", "ProdutosController@index");
+$router->get("cadastro", "ProdutosController@cadastro");
+$router->post("edicao", "ProdutosController@update");
+$router->get("edicao", "ProdutosController@edicao");
+$router->post("cadastro", "ProdutosController@store");
+$router->delete("deletar", "ProdutosController@deletar");

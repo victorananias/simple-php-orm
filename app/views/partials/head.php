@@ -3,7 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel="stylesheet" href="public/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" type="text/css" rel="stylesheet">
+    <link href="public/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="public/css/style.css" type="text/css" rel="stylesheet">
   </head>
   <body>
     <?php require "nav.php"; ?>
