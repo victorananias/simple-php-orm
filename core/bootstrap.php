@@ -12,7 +12,7 @@ use App\Core\Database\Conexao;
 use App\Core\Database\QueryBuilder;
 
 if(!file_exists('./config.php')) {
-    die("config file not found.");
+    die("\"config.php\" was not found. Please, create it and try again.");
 }
 
 App::bind('config', require 'config.php');
