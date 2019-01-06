@@ -10,7 +10,7 @@ class Conexao {
     public static function iniciar($config) {
         try {
             return new PDO(
-                $config['connection'].";dbname=".$config['dbname'].";charset=".$config['charset'],
+                $config['connection'].";Database=".$config['Database'],
                 $config['username'],
                 $config['password']
             );

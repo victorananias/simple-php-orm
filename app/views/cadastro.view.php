@@ -19,12 +19,12 @@
                       <div class="form-group">
                         <label for="segmento">Segmento</label>
                         <select class="form-control" id="segmento" name="SegmentoID" required>
-                        <option hidden selected>-</option>
-                        <?php foreach($segmentos as $segmento): ?>
-                            <option value="<?= $segmento->SegmentoID; ?>">
-                                <?= $segmento->NmSegmento; ?>
-                            </option>
-                        <?php endforeach; ?>
+                            <option hidden value="">-</option>
+                            <?php foreach ($segmentos as $segmento): ?>
+                                <option value="<?= $segmento->SegmentoID; ?>">
+                                    <?= $segmento->NmSegmento; ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                       </div>
 

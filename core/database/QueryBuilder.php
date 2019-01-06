@@ -74,6 +74,7 @@ class QueryBuilder {
 	public function delete($table, $where) {
 		$coluna = array_keys($where)[0];
 		$sql = "DELETE FROM $table WHERE {$coluna}=:{$coluna}";
+		
 		try {
 			$statement = $this->pdo->prepare($sql);
 			$statement->execute($where);
