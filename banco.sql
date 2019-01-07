@@ -1,8 +1,12 @@
+-- CREATE PROCEDURE sp_sprodutos AS SELECT * FROM TblProduto; --
+-- CREATE PROCEDURE sp_isegmentos (
+--     @NmSegmento VARCHAR(250),
+--     @Descricao TEXT
+-- ) AS INSERT INTO TblSegmento VALUES(@NmSegmento, @Descricao);
+
 DROP DATABASE IF EXISTS banco_teste;
 
 CREATE DATABASE banco_teste;
-
-USE banco_teste;
 
 CREATE TABLE TblProduto(
     ProdutoID INT NOT NULL PRIMARY KEY IDENTITY(1, 1), 
@@ -17,6 +21,8 @@ CREATE TABLE TblSegmento(
     Descricao TEXT
 );
 
-INSERT INTO TblSegmento VALUES('Saúde', 'Produtos utilizado para Saúde.'), 
-('Cosméticos', 'Produtos utilizado para Cosméticos.'), 
-('Alimentício', 'Produtos utilizado para Alimentício.');
+ALTER TABLE TblProduto ADD FOREIGN KEY (SegmentoID) REFERENCES TblProduto(ProdutoID);
+
+exec sp_isegmentos 'Saúde', 'Produtos utilizado para Saúde.';
+exec sp_isegmentos 'Cosméticos', 'Produtos utilizado para Cosméticos.'; 
+exec sp_isegmentos 'Alimentício', 'Produtos utilizado para Alimentício.';
