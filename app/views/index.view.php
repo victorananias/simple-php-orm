@@ -22,23 +22,22 @@
                         <tbody>
                             <?php foreach ($produtos as $produto): ?>
 
-                                <tr scope="row" id="<?= 'produto'.$produto->ProdutoID; ?>">
+                                <tr scope="row" id="<?= 'produto'.$produto->id; ?>">
                                     <td>
-                                        <?= $produto->NmProduto; ?>
+                                        <?= $produto->nome; ?>
                                     </td>
                                     <td>
-                                        <?= $produto->segmento()->NmSegmento; ?>
+                                        <?= $produto->segmento()->nome; ?>
                                     </td>
                                     <td width="5%">
-                                        <button class="btn btn-sm text-success" onclick="editar('<?= $produto->ProdutoID; ?>')">
+                                        <button class="btn btn-sm text-success" onclick="editar('<?= $produto->id; ?>')">
                                             <i class="material-icons float-right">edit</i>
                                         </button>
                                     </td>
                                     <td width="5%">
-                                    <button class="btn btn-sm text-danger" onclick="editar('<?= $produto->ProdutoID; ?>')">
-                                        <i class="material-icons float-right clicavel" onclick="deletar('<?= $produto->ProdutoID; ?>')">delete</i>
-                                    </button>
-                                    
+                                        <button class="btn btn-sm text-danger" onclick="deletar('<?= $produto->id; ?>')">
+                                            <i class="material-icons float-right clicavel">delete</i>
+                                        </button>
                                     </td>
                                 </tr>
 
@@ -54,28 +53,21 @@
 <script>
 
     function editar(id) {
-        window.open(`edicao?produto=${id}`, '_self');
+        window.open(`produtos/edit?produto=${id}`, '_self');
     }
 
     function deletar(id) {
         $.ajax({
-            url: `/deletar?ProdutoID=${id}`,
+            url: `/produtos?produto=${id}`,
             type: 'delete',
             dataType: 'json',
         })
         .done(function() {
             $(`#produto${id}`).remove();
-            verificarAviso();
         })
         .fail(function() {
             console.log("Erro ao deletar produto.");
         });
-    }
-
-    function verificarAviso() {
-        if($('#lista').children().length == 0) {
-            $('#aviso')[0].style.display = 'inherit';
-        } 
     }
 </script>
 

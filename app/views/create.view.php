@@ -9,20 +9,20 @@
                 </div>
                 <div class="card-body">
 
-                    <form action="/cadastro" method="POST">
+                    <form action="/produtos" method="POST" autocomplete="off">
                       <div class="form-group">
 
-                        <label for="NmProduto">Nome:</label>
-                        <input type="text" name="NmProduto" id="NmProduto" class="form-control" placeholder="Insira o nome do produto." required>
+                        <label for="nome">Nome:</label>
+                        <input type="text" name="nome" id="nome" class="form-control" placeholder="Insira o nome do produto." required>
                       </div>
 
                       <div class="form-group">
                         <label for="segmento">Segmento</label>
-                        <select class="form-control" id="segmento" name="SegmentoID" required>
+                        <select class="form-control" id="segmento" name="segmento_id" required>
                             <option hidden value="">-</option>
                             <?php foreach ($segmentos as $segmento): ?>
-                                <option value="<?= $segmento->SegmentoID; ?>">
-                                    <?= $segmento->NmSegmento; ?>
+                                <option value="<?= $segmento->id; ?>">
+                                    <?= $segmento->nome; ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

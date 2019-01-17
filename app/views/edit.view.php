@@ -9,21 +9,21 @@
                 </div>
                 <div class="card-body">
 
-                    <form action="/edicao" method="POST">
-                      <input type="text" hidden value="<?= $produto->ProdutoID?>" name="ProdutoID">
+                    <form action="/produtos/edit" method="POST">
+                      <input type="text" hidden value="<?= $produto->id?>" name="id">
                       <div class="form-group">
 
-                        <label for="NmProduto">Nome:</label>
-                        <input type="text" name="NmProduto" id="NmProduto" class="form-control" placeholder="Insira o nome do produto."
-                            value="<?= $produto->NmProduto; ?>" required>
+                        <label for="nome">Nome:</label>
+                        <input type="text" name="nome" id="nome" class="form-control" placeholder="Insira o nome do produto."
+                            value="<?= $produto->nome; ?>" required>
                       </div>
 
                       <div class="form-group">
                         <label for="segmento">Segmento</label>
-                        <select class="form-control" id="segmento" name="SegmentoID">
-                        <?php foreach($segmentos as $segmento): ?>
-                            <option value="<?= $segmento->SegmentoID; ?>" <?= $produto->SegmentoID == $segmento->SegmentoID ? 'selected' : '' ?>>
-                                <?= $segmento->NmSegmento; ?>
+                        <select class="form-control" id="segmento" name="segmento_id">
+                        <?php foreach ($segmentos as $segmento): ?>
+                            <option value="<?= $segmento->id; ?>" <?= $produto->segmento_id == $segmento->id ? 'selected' : '' ?>>
+                                <?= $segmento->nome; ?>
                             </option>
                         <?php endforeach; ?>
                         </select>

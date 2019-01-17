@@ -13,28 +13,28 @@ class ProdutosController
         return view('index', compact('produtos'));
     }
 
-    public function cadastro()
+    public function create()
     {
-        $segmentos = App::get('db')->selectAll("TblSegmento", 'App\Models\Segmento');
-        return view('cadastro', compact('segmentos'));
+        $segmentos = App::get('db')->selectAll("segmentos", 'App\Models\Segmento');
+        return view('create', compact('segmentos'));
     }
 
-    public function edicao()
+    public function edit()
     {
-        $produto = App::get('db')->select("TblProduto", 'App\Models\Produto', [
-            'ProdutoID' => "{$_GET['produto']}"
+        $produto = App::get('db')->select("produtos", 'App\Models\Produto', [
+            'id' => "{$_GET['produto']}"
         ]);
 
-        $segmentos = App::get('db')->selectAll("TblSegmento", 'App\Models\Segmento');
+        $segmentos = App::get('db')->selectAll("segmentos", 'App\Models\Segmento');
 
-        return view('edicao', compact(['produto', 'segmentos']));
+        return view('edit', compact(['produto', 'segmentos']));
     }
 
     public function store()
     {
-        App::get('db')->insert('TblProduto', [
-            'NmProduto' => $_POST['NmProduto'],
-            'SegmentoID' => $_POST['SegmentoID']
+        App::get('db')->insert('produtos', [
+            'nome' => $_POST['nome'],
+            'segmento_id' => $_POST['segmento_id']
         ]);
         
         return redirecionar('');
@@ -43,20 +43,20 @@ class ProdutosController
     public function update()
     {
         App::get('db')->update(
-            'TblProduto',
-            ['ProdutoID' => $_POST['ProdutoID']],
-        [
-            'NmProduto' => $_POST['NmProduto'],
-            'SegmentoID' => $_POST['SegmentoID']
-        ]
+            'produtos',
+            ['id' => $_POST['id']],
+            [
+                'nome' => $_POST['nome'],
+                'segmento_id' => $_POST['segmento_id']
+            ]
         );
 
-        return redirecionar('');
+        return redirecionar('produtos');
     }
 
-    public function deletar()
+    public function destroy()
     {
-        App::get('db')->delete('TblProduto', ['ProdutoID' => $_GET['ProdutoID']]);
+        App::get('db')->delete('produtos', ['id' => $_GET['produto']]);
         echo json_encode(['mensagem' => 'Deletado.']);
     }
 }

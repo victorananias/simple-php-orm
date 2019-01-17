@@ -4,7 +4,8 @@ namespace App\Core;
 
 use \Exception;
 
-class Router {
+class Router
+{
     protected $routes = [
         'POST' => [],
         'GET' => [],
@@ -12,31 +13,36 @@ class Router {
         'PUT' => []
     ];
 
-    public static function carregar($arquivo) {
+    public static function carregar($arquivo)
+    {
         $router = new self;
         require $arquivo;
         return $router;
     }
 
-    public function post($rota, $controller) {
+    public function post($rota, $controller)
+    {
         $this->routes['POST'][$rota] = $controller;
     }
 
-    public function get($rota, $controller) {
+    public function get($rota, $controller)
+    {
         $this->routes['GET'][$rota] = $controller;
     }
 
-    public function put($rota, $controller) {
+    public function put($rota, $controller)
+    {
         $this->routes['PUT'][$rota] = $controller;
     }
 
-    public function delete($rota, $controller) {
+    public function delete($rota, $controller)
+    {
         $this->routes['DELETE'][$rota] = $controller;
     }
 
-    public function direcionar($uri, $requestType) {
-
-        if(array_key_exists($uri, $this->routes[$requestType])) {
+    public function direcionar($uri, $requestType)
+    {
+        if (array_key_exists($uri, $this->routes[$requestType])) {
             $dados = explode('@', $this->routes[$requestType][$uri]);
 
             $controller = $dados[0];
@@ -45,20 +51,18 @@ class Router {
             return $this->executarAcao($controller, $metodo);
         }
 
-        throw new Exception("URI solicitada não existe.");
+        throw new Exception("URI solicitada não existe. {$uri}");
     }
 
-    protected function executarAcao($controller, $metodo) {
+    protected function executarAcao($controller, $metodo)
+    {
         $controller = "App\\Controllers\\{$controller}";
         $controller = new $controller;
 
-        if(!method_exists($controller, $metodo)) {
+        if (!method_exists($controller, $metodo)) {
             throw new Exception("Método não encontrado.");
         }
 
         return $controller->$metodo();
     }
-
-
-
 }

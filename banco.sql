@@ -1,28 +1,24 @@
--- CREATE PROCEDURE sp_sprodutos AS SELECT * FROM TblProduto; --
--- CREATE PROCEDURE sp_isegmentos (
---     @NmSegmento VARCHAR(250),
---     @Descricao TEXT
--- ) AS INSERT INTO TblSegmento VALUES(@NmSegmento, @Descricao);
-
 DROP DATABASE IF EXISTS banco_teste;
 
 CREATE DATABASE banco_teste;
 
-CREATE TABLE TblProduto(
-    ProdutoID INT NOT NULL PRIMARY KEY IDENTITY(1, 1), 
-    NmProduto VARCHAR(250),
-    DtCadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
-    SegmentoID  INT
+USE banco_teste;
+
+CREATE TABLE produtos(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+    nome VARCHAR(250) NOT NULL,
+    data DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    segmento_id INT NOT NULL
 );
 
-CREATE TABLE TblSegmento(
-    SegmentoID INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
-    NmSegmento VARCHAR(250),
-    Descricao TEXT
+CREATE TABLE segmentos(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(250) NOT NULL,
+    descricao TEXT
 );
 
-ALTER TABLE TblProduto ADD FOREIGN KEY (SegmentoID) REFERENCES TblProduto(ProdutoID);
+ALTER TABLE produtos ADD FOREIGN KEY(segmento_id) REFERENCES segmentos(id);
 
-exec sp_isegmentos 'Saúde', 'Produtos utilizado para Saúde.';
-exec sp_isegmentos 'Cosméticos', 'Produtos utilizado para Cosméticos.'; 
-exec sp_isegmentos 'Alimentício', 'Produtos utilizado para Alimentício.';
+INSERT INTO segmentos VALUES(NULL, "Saúde", "Produtos utilizado para Saúde."), 
+(NULL, "Cosméticos", "Produtos utilizado para Cosméticos."), 
+(NULL, "Alimentício", "Produtos utilizado para Alimentício.");

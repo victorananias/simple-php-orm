@@ -4,8 +4,8 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-      <li class="nav-item"><a class="nav-link" href="/">Lista</a></li>
-        <li class="nav-item"><a class="nav-link" href="/cadastro">Cadastro</a></li>
+      <li class="nav-item"><a class="nav-link" href="/produtos">Lista</a></li>
+        <li class="nav-item"><a class="nav-link" href="/produtos/create">Cadastro</a></li>
     </ul>
   </div>
 </nav>

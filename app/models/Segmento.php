@@ -6,13 +6,12 @@ use App\Core\App;
 
 class Segmento
 {
-    public $SegmentoID;
-    public $NmSegmento;
-    public $Descricao;
+    public $id;
+    public $nome;
+    public $descricao;
 
-    public static function find($SegmentoID)
+    public static function find($id)
     {
-        $segmento = App::get('db')->select("TblSegmento", 'App\Models\Segmento', compact('SegmentoID'));
-        return $segmento;
+        return App::get('db')->select("segmentos", 'App\Models\Segmento', compact('id'));
     }
 }
