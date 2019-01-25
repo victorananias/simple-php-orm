@@ -1,5 +1,5 @@
 # CRUD PHP
 
-*composer install
+* composer install
 
-*php -S 127.0.0.1:8888
+* php -S 127.0.0.1:8888
