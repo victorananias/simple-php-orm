@@ -1,7 +1,5 @@
-# CRUD PHP feito com base no curso Laracasts The PHP Practitioner
+# CRUD PHP
 
-php -S 127.0.0.1:8888
+*composer install
 
-composer install
-
-composer dump-autoload
+*php -S 127.0.0.1:8888
