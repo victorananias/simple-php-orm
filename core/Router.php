@@ -13,7 +13,7 @@ class Router
         'PUT' => []
     ];
 
-    public static function carregar($arquivo)
+    public static function load($arquivo)
     {
         $router = new self;
         require $arquivo;
@@ -40,29 +40,25 @@ class Router
         $this->routes['DELETE'][$rota] = $controller;
     }
 
-    public function direcionar($uri, $requestType)
+    public function redirect($uri, $requestType)
     {
-        if (array_key_exists($uri, $this->routes[$requestType])) {
-            $dados = explode('@', $this->routes[$requestType][$uri]);
-
-            $controller = $dados[0];
-            $metodo = $dados[1];
-
-            return $this->executarAcao($controller, $metodo);
+        if(array_key_exists($uri, $this->routes[$requestType])) {
+            return $this->executeAction(
+                ...explode('@', $this->routes[$requestType][$uri])
+            );
         }
-
-        throw new Exception("URI solicitada não existe. {$uri}");
+        throw new Exception("URI solicitada não existe.");
     }
 
-    protected function executarAcao($controller, $metodo)
+    protected function executeAction($controller, $method)
     {
         $controller = "App\\Controllers\\{$controller}";
         $controller = new $controller;
 
-        if (!method_exists($controller, $metodo)) {
+        if (!method_exists($controller, $method)) {
             throw new Exception("Método não encontrado.");
         }
 
-        return $controller->$metodo();
+        return $controller->$method();
     }
 }

@@ -4,17 +4,18 @@ namespace App\Core;
 
 class App {
     
-    protected static $dados;
+    protected static $data;
 
     public static function bind($key, $value) {
-        self::$dados[$key] = $value;
+        self::$data[$key] = $value;
     }
 
     public static function get($key) {
-        if(!array_key_exists($key, self::$dados)) {
+        if (!array_key_exists($key, self::$data)) {
             throw new Exception("App não contém {$key}.");
         }
         
-        return self::$dados[$key];
+        return self::$data[$key];
     }
+
 }

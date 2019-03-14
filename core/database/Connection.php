@@ -5,15 +5,16 @@ namespace App\Core\Database;
 use \PDO;
 use \PDOException;
 
-class Conexao
+class Connection
 {
-    public static function iniciar($config)
+    public static function start($config)
     {
         try {
             return new PDO(
-                $config['connection'].";dbname=".$config['dbname'].";charset=".$config['charset'],
+                "{$config['connection']};Database={$config['Database']}",
                 $config['username'],
-                $config['password']
+                $config['password'],
+                $config['options']
             );
         } catch (PDOException $exception) {
             die($exception->getMessage());

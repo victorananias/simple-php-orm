@@ -5,82 +5,174 @@ namespace App\Core\Database;
 use \PDO;
 
 class QueryBuilder {
-	protected $pdo;
+    protected $pdo;
+
+    protected $table;
+    protected $sql = '';
+    protected $joins = [];
+    protected $where = [];
+    protected $columns = [];
 
 	public function __construct(PDO $pdo) {
 		$this->pdo = $pdo;
 	}
 
-	public function selectAll($tabela, $classe) {
-		$statement = $this->pdo->prepare("SELECT * FROM {$tabela}");
-		$statement->execute();
+    /**
+     * @param string $name
+     * @return $this
+     */
+	public function table($name = null) {
+	    if (!$name) {
+	        die('Table name not specified.');
+        }
 
-		return $statement->fetchAll(PDO::FETCH_CLASS, $classe);
+	    $this->table = $name;
+
+	    return $this;
+    }
+
+    public function where(...$data)
+    {
+        // Simple where
+        if (count($data) == 2) {
+            $this->where[] = implode(' = ', $data);
+        }
+
+        // where condition specified
+        if (count($data) == 3) {
+            $this->where[] = implode(' ', $data);
+        }
+
+        return $this;
+    }
+
+	public function all() {
+	    $this->sql = "SELECT * FROM {$this->table}";
+	    return $this->fetchAll();
 	}
 
-	public function select($tabela, $classe, $where = null) {
-		$coluna = array_keys($where)[0];
-
-		$sql = sprintf("SELECT * FROM %s where %s=%s",$tabela,$coluna,$where[$coluna]);
-
-		try {
-			$statement = $this->pdo->prepare($sql);
-			$statement->execute();
-			$statement->setFetchMode(PDO::FETCH_CLASS, $classe);
-			$item = $statement->fetch(PDO::FETCH_CLASS);
-
-		} catch(PDOException $e) {
-			die($e->getMessage());
-		}
-
-		return $item; 
+    /**
+     *
+     *
+     *
+     * @param mixed ...$columns
+     * @return $this
+     */
+	public function select(...$columns)
+    {
+	    $this->columns = $columns;
+	    return $this;
 	}
 
-	public function insert($tabela, $dados) {
-		$sql = sprintf(
-			"INSERT INTO %s(%s) values(%s)",
-			$tabela,
-			implode(', ', array_keys($dados)),
-			':' . implode(', :', array_keys($dados))
-		);
+    /**
+     *
+     */
+	public function get()
+    {
+        $this->prepareSelect();
+        return $this->fetchAll();
+    }
 
-		try {
-			$statement = $this->pdo->prepare($sql);
-			$statement->execute($dados);
+    public function join($table, $column1, $condition, $column2, $type = 'INNER')
+    {
+        $this->joins[] = "{$type} JOIN {$table} ON {$column1} {$condition} {$column2}";
+        return $this;
+    }
 
-		} catch(PDOException $e) {
-			die($e->getMessage());
-		}
-	}
+//	public function insert($tabela, $dados) {
+//		$sql = sprintf(
+//			"INSERT INTO %s(%s) values(%s)",
+//			$tabela,
+//			implode(', ', array_keys($dados)),
+//			':' . implode(', :', array_keys($dados))
+//		);
+//
+//		try {
+//			$statement = $this->pdo->prepare($sql);
+//			$statement->execute($dados);
+//
+//		} catch(\PDOException $e) {
+//			die($e->getMessage());
+//		}
+//	}
 
-	public function update($tabela, $where = [], $dados) {
-		$coluna = array_keys($where)[0];
+//	public function update($tabela, $where = [], $dados) {
+//		$column = array_keys($where)[0];
+//
+//		$colunas = substr(array_reduce(array_keys($dados), function($total, $value) {
+//			return $total .= "$value = :$value, ";
+//		}, ''), 0, -2);
+//
+//		$sql = sprintf("UPDATE %s SET %s where %s=%s", $tabela, $colunas, $column, $where[$column]);
+//
+//		try {
+//			$statement = $this->pdo->prepare($sql);
+//			$statement->execute($dados);
+//
+//		} catch(\PDOException $e) {
+//			die($e->getMessage());
+//		}
+//	}
 
-		$colunas = substr(array_reduce(array_keys($dados), function($total, $value) {
-			return $total .= "$value = :$value, ";
-		}, ''), 0, -2);
+//	public function delete($table, $where) {
+//		$coluna = array_keys($where)[0];
+//		$sql = "DELETE FROM $table WHERE {$coluna}=:{$coluna}";
+//
+//		try {
+//			$statement = $this->pdo->prepare($sql);
+//			$statement->execute($where);
+//
+//		} catch(\PDOException $e) {
+//			die($e->getMessage());
+//		}
+//	}
 
-		$sql = sprintf("UPDATE %s SET %s where %s=%s", $tabela, $colunas, $coluna, $where[$coluna]);
+	public function toSql() {
+	    $this->prepareSelect();
+	    return $this->sql;
+    }
 
-		try {
-			$statement = $this->pdo->prepare($sql);
-			$statement->execute($dados);
+    /**
+     *  Prepare select query
+     */
+	protected function prepareSelect() {
+	    $this->sql = '';
+        $joins = '';
+        $where = '';
+        $columns = '*';
 
-		} catch(PDOException $e) {
-			die($e->getMessage());
-		}
-	}
+        if ($this->columns) {
+            $columns = implode(', ', $this->columns);
+        }
 
-	public function delete($table, $where) {
-		$coluna = array_keys($where)[0];
-		$sql = "DELETE FROM $table WHERE {$coluna}=:{$coluna}";
-		
-		try {
-			$statement = $this->pdo->prepare($sql);
-			$statement->execute($where);
+        if ($this->joins) {
+            $joins = implode(' ', $this->joins);
+        }
 
-		} catch(PDOException $e) {
-			die($e->getMessage());
-		}
-	}
+        if ($this->where) {
+            $where = 'WHERE '. implode(' AND', $this->where);
+        }
+
+        $this->sql = "SELECT {$columns} FROM {$this->table} {$joins} {$where}";
+    }
+
+    /**
+     *
+     * Execute PDO->statement->fetchAll
+     *
+     * @return array
+     */
+	protected function fetchAll()
+    {
+        try {
+            $statement = $this->pdo->prepare($this->sql);
+            $statement->execute();
+
+            return $statement->fetchAll(PDO::FETCH_OBJ);
+
+        } catch(\Exception $e) {
+            die($e->getMessage());
+        }
+    }
+
 }
