@@ -73,6 +73,14 @@ class QueryBuilder {
         return $this->fetchAll();
     }
 
+    /**
+     * @param $table
+     * @param $column1
+     * @param $condition
+     * @param $column2
+     * @param string $type
+     * @return $this
+     */
     public function join($table, $column1, $condition, $column2, $type = 'INNER')
     {
         $this->joins[] = "{$type} JOIN {$table} ON {$column1} {$condition} {$column2}";
@@ -156,9 +164,17 @@ class QueryBuilder {
         $this->sql = "SELECT {$columns} FROM {$this->table} {$joins} {$where}";
     }
 
+    public function count() {
+	    $this->columns = ['count(*)'];
+
+	    $this->prepareSelect();
+
+	    return $this->fetchColumn();
+    }
+
     /**
      *
-     * Execute PDO->statement->fetchAll
+     * Fetch all data for the sql query
      *
      * @return array
      */
@@ -168,6 +184,7 @@ class QueryBuilder {
             $statement = $this->pdo->prepare($this->sql);
             $statement->execute();
 
+            $this->reset();
             return $statement->fetchAll(PDO::FETCH_OBJ);
 
         } catch(\Exception $e) {
@@ -175,4 +192,32 @@ class QueryBuilder {
         }
     }
 
+    /**
+     *
+     * Fetch specified Column
+     *
+     * @return array
+     */
+	protected function fetchColumn($columnNumber = 0)
+    {
+        try {
+            $statement = $this->pdo->prepare($this->sql);
+            $statement->execute();
+
+            $this->reset();
+            return $statement->fetchColumn($columnNumber);
+
+        } catch(\Exception $e) {
+            die($e->getMessage());
+        }
+    }
+
+    protected function reset()
+    {
+        $this->table = null;
+        $this->sql = '';
+        $this->joins = [];
+        $this->where = [];
+        $this->columns = [];
+    }
 }
