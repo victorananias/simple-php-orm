@@ -9,6 +9,8 @@ class QueryBuilder {
 
     protected $table;
     protected $sql = '';
+
+    protected $limit;
     protected $joins = [];
     protected $where = [];
     protected $columns = [];
@@ -16,6 +18,10 @@ class QueryBuilder {
 	public function __construct(PDO $pdo) {
 		$this->pdo = $pdo;
 	}
+
+	public function from($name = null) {
+	    return $this->table($name);
+    }
 
     /**
      * @param string $name
@@ -33,6 +39,13 @@ class QueryBuilder {
 
     public function where(...$data)
     {
+        // Multiple Where
+        if (count($data) == 1 && is_array($data[0])) {
+            foreach ($data[0] as $column => $value) {
+                $this->where[] = "$column = $value";
+            }
+        }
+
         // Simple where
         if (count($data) == 2) {
             $this->where[] = implode(' = ', $data);
@@ -42,6 +55,13 @@ class QueryBuilder {
         if (count($data) == 3) {
             $this->where[] = implode(' ', $data);
         }
+
+        return $this;
+    }
+
+    public function whereNull($column)
+    {
+        $this->where[] = "{$column} IS NULL";
 
         return $this;
     }
@@ -71,6 +91,13 @@ class QueryBuilder {
     {
         $this->prepareSelect();
         return $this->fetchAll();
+    }
+
+    public function first()
+    {
+        $this->limit = 1;
+        $this->prepareSelect();
+        return $this->fetch();
     }
 
     /**
@@ -104,23 +131,27 @@ class QueryBuilder {
 //		}
 //	}
 
-//	public function update($tabela, $where = [], $dados) {
-//		$column = array_keys($where)[0];
-//
-//		$colunas = substr(array_reduce(array_keys($dados), function($total, $value) {
-//			return $total .= "$value = :$value, ";
-//		}, ''), 0, -2);
-//
-//		$sql = sprintf("UPDATE %s SET %s where %s=%s", $tabela, $colunas, $column, $where[$column]);
-//
-//		try {
-//			$statement = $this->pdo->prepare($sql);
-//			$statement->execute($dados);
-//
-//		} catch(\PDOException $e) {
-//			die($e->getMessage());
-//		}
-//	}
+	public function update($data)
+    {
+		$colunas = substr(array_reduce(array_keys($data), function($total, $value) {
+			return $total .= "$value = :$value, ";
+		}, ''), 0, -2);
+
+		$where = '';
+        if ($this->where) {
+            $where = 'WHERE '. implode(' AND ', $this->where);
+        }
+
+		$sql = sprintf("UPDATE %s SET %s %s", $this->table, $colunas, $where);
+
+		try {
+			$statement = $this->pdo->prepare($sql);
+			$statement->execute($data);
+
+		} catch(\PDOException $e) {
+			die($e->getMessage());
+		}
+	}
 
 //	public function delete($table, $where) {
 //		$coluna = array_keys($where)[0];
@@ -148,6 +179,7 @@ class QueryBuilder {
         $joins = '';
         $where = '';
         $columns = '*';
+        $limit = '';
 
         if ($this->columns) {
             $columns = implode(', ', $this->columns);
@@ -158,10 +190,14 @@ class QueryBuilder {
         }
 
         if ($this->where) {
-            $where = 'WHERE '. implode(' AND', $this->where);
+            $where = 'WHERE '. implode(' AND ', $this->where);
         }
 
-        $this->sql = "SELECT {$columns} FROM {$this->table} {$joins} {$where}";
+        if ($this->limit) {
+            $limit = "TOP {$this->limit} ";
+        }
+
+        $this->sql = "SELECT {$limit}{$columns} FROM {$this->table} {$joins} {$where}";
     }
 
     public function count() {
@@ -184,8 +220,26 @@ class QueryBuilder {
             $statement = $this->pdo->prepare($this->sql);
             $statement->execute();
 
-            $this->reset();
             return $statement->fetchAll(PDO::FETCH_OBJ);
+
+        } catch(\Exception $e) {
+            die($e->getMessage());
+        }
+    }
+
+    /**
+     *
+     * Fetch all data for the sql query
+     *
+     * @return array
+     */
+	protected function fetch()
+    {
+        try {
+            $statement = $this->pdo->prepare($this->sql);
+            $statement->execute();
+
+            return $statement->fetch(PDO::FETCH_OBJ);
 
         } catch(\Exception $e) {
             die($e->getMessage());
@@ -204,20 +258,10 @@ class QueryBuilder {
             $statement = $this->pdo->prepare($this->sql);
             $statement->execute();
 
-            $this->reset();
             return $statement->fetchColumn($columnNumber);
 
         } catch(\Exception $e) {
             die($e->getMessage());
         }
-    }
-
-    protected function reset()
-    {
-        $this->table = null;
-        $this->sql = '';
-        $this->joins = [];
-        $this->where = [];
-        $this->columns = [];
     }
 }
