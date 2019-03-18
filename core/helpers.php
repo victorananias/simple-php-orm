@@ -30,3 +30,22 @@ function redirect($url = null)
     header("Location: {$url}");
     return;
 }
+
+function post($index) {
+    return isset($_POST[$index]) ? $_POST[$index] : null;
+}
+
+function get($index) {
+    return isset($_GET[$index]) ? $_GET[$index] : null;
+}
+
+function request($index = null) {
+    if (!$index) {
+        return [
+            'post' => $_POST,
+            'get' => $_GET,
+        ];
+    }
+
+    return get($index) ?: post($index);
+}

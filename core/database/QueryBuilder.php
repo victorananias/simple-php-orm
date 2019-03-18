@@ -14,6 +14,8 @@ class QueryBuilder {
     protected $joins = [];
     protected $where = [];
     protected $columns = [];
+    protected $insert = [];
+    protected $order = [];
 
 	public function __construct(PDO $pdo) {
 		$this->pdo = $pdo;
@@ -114,39 +116,45 @@ class QueryBuilder {
         return $this;
     }
 
-//	public function insert($tabela, $dados) {
-//		$sql = sprintf(
-//			"INSERT INTO %s(%s) values(%s)",
-//			$tabela,
-//			implode(', ', array_keys($dados)),
-//			':' . implode(', :', array_keys($dados))
-//		);
-//
-//		try {
-//			$statement = $this->pdo->prepare($sql);
-//			$statement->execute($dados);
-//
-//		} catch(\PDOException $e) {
-//			die($e->getMessage());
-//		}
-//	}
+        public function create($data = []) {
+		$sql = sprintf(
+			"INSERT INTO %s(%s) values(%s)",
+			$this->table,
+			implode(', ', array_keys($data)),
+            substr(str_repeat('?, ', count($data)), 0, -2)
+		);
+
+		$this->insert = array_values($data);
+
+		try {
+			$statement = $this->pdo->prepare($sql);
+			$statement->execute($this->insert);
+
+		} catch(\PDOException $e) {
+			die($e->getMessage());
+		}
+	}
+
+	public function orderBy($column, $type = 'ASC')
+    {
+        $this->order = compact(['column', 'type']);
+        return $this;
+    }
 
 	public function update($data)
     {
-		$colunas = substr(array_reduce(array_keys($data), function($total, $value) {
-			return $total .= "$value = :$value, ";
-		}, ''), 0, -2);
+		$columns = implode( ' = ?, ', array_keys($data)). ' = ? ';
 
 		$where = '';
         if ($this->where) {
             $where = 'WHERE '. implode(' AND ', $this->where);
         }
 
-		$sql = sprintf("UPDATE %s SET %s %s", $this->table, $colunas, $where);
+		$sql = sprintf("UPDATE %s SET %s %s", $this->table, $columns, $where);
 
-		try {
+    	try {
 			$statement = $this->pdo->prepare($sql);
-			$statement->execute($data);
+			$statement->execute(array_values($data));
 
 		} catch(\PDOException $e) {
 			die($e->getMessage());
@@ -180,6 +188,7 @@ class QueryBuilder {
         $where = '';
         $columns = '*';
         $limit = '';
+        $order = '';
 
         if ($this->columns) {
             $columns = implode(', ', $this->columns);
@@ -197,7 +206,11 @@ class QueryBuilder {
             $limit = "TOP {$this->limit} ";
         }
 
-        $this->sql = "SELECT {$limit}{$columns} FROM {$this->table} {$joins} {$where}";
+        if ($this->order) {
+            $order = "ORDER BY {$this->order['column']} {$this->order['type']}";
+        }
+
+        $this->sql = "SELECT {$limit}{$columns} FROM {$this->table} {$joins} {$where} {$order}";
     }
 
     public function count() {
