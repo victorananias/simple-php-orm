@@ -17,6 +17,12 @@ if (!file_exists(__DIR__.'/../config.php')) {
 
 App::bind('config', require __DIR__.'/../config.php');
 
-App::bind('db', new QueryBuilder(
-    Connection::start(App::get('config')['database'])
-));
+//App::bind('db', new QueryBuilder(
+//    Connection::start(App::get('config')['database'])
+//));
+
+function db() {
+    return new QueryBuilder(
+        Connection::start(App::get('config')['database'])
+    );
+}

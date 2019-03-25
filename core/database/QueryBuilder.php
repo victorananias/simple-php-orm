@@ -14,6 +14,7 @@ class QueryBuilder {
     protected $joins = [];
     protected $where = [];
     protected $columns = [];
+    protected $group = [];
     protected $insert = [];
     protected $order = [];
 
@@ -37,6 +38,11 @@ class QueryBuilder {
 	    $this->table = $name;
 
 	    return $this;
+    }
+
+    public function limit($limit= 10) {
+        $this->limit = $limit;
+        return $this;
     }
 
     public function where(...$data)
@@ -64,7 +70,12 @@ class QueryBuilder {
     public function whereNull($column)
     {
         $this->where[] = "{$column} IS NULL";
+        return $this;
+    }
 
+    public function whereNotNull($column)
+    {
+        $this->where[] = "{$column} IS NOT NULL";
         return $this;
     }
 
@@ -72,6 +83,11 @@ class QueryBuilder {
 	    $this->sql = "SELECT * FROM {$this->table}";
 	    return $this->fetchAll();
 	}
+
+	public function groupBy(...$columns) {
+        $this->group = $columns;
+        return $this;
+    }
 
     /**
      *
@@ -86,12 +102,30 @@ class QueryBuilder {
 	    return $this;
 	}
 
+	public function pluck($column)
+    {
+        $this->prepareSelect();
+
+        $result = $this->fetchAll();
+
+        if (count($result) == 0) {
+            return [];
+        }
+
+        return array_map(function($i) use ($column){
+            return $i->$column;
+        }, $result);
+    }
+
     /**
      *
      */
 	public function get()
     {
-        $this->prepareSelect();
+        if (!$this->sql) {
+            $this->prepareSelect();
+        }
+
         return $this->fetchAll();
     }
 
@@ -116,7 +150,7 @@ class QueryBuilder {
         return $this;
     }
 
-        public function create($data = []) {
+    public function create($data = []) {
 		$sql = sprintf(
 			"INSERT INTO %s(%s) values(%s)",
 			$this->table,
@@ -161,6 +195,11 @@ class QueryBuilder {
 		}
 	}
 
+	public function raw($sql) {
+        $this->sql = $sql;
+        return $this;
+    }
+
 //	public function delete($table, $where) {
 //		$coluna = array_keys($where)[0];
 //		$sql = "DELETE FROM $table WHERE {$coluna}=:{$coluna}";
@@ -189,6 +228,7 @@ class QueryBuilder {
         $columns = '*';
         $limit = '';
         $order = '';
+        $groupBy = '';
 
         if ($this->columns) {
             $columns = implode(', ', $this->columns);
@@ -210,7 +250,13 @@ class QueryBuilder {
             $order = "ORDER BY {$this->order['column']} {$this->order['type']}";
         }
 
-        $this->sql = "SELECT {$limit}{$columns} FROM {$this->table} {$joins} {$where} {$order}";
+        if ($this->group) {
+            $groupBy = 'GROUP BY ' . implode(', ', $this->group);
+        }
+
+        $this->sql = "SELECT {$limit}{$columns} FROM {$this->table} {$joins} {$where} {$groupBy} {$order}";
+
+        return $this;
     }
 
     public function count() {
