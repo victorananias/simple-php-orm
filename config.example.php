@@ -2,11 +2,11 @@
 
 return [
     'database' => [
-        'connection' => "localhost",
-        'Database' => "banco_teste",
-        'charset' => "UTF8",
-        'username' => "username",
-        'password' => "password",
-        'config' => []
+        'connection' => "sqlsrv:Server=SERVERIP,1433",
+        'Database' => "DATABASE",
+        'charset' => "UTF-8",
+        'username' => "DBUSER",
+        'password' => "DBPASS",
+        'options' => [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
     ]
 ];

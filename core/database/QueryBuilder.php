@@ -67,6 +67,12 @@ class QueryBuilder {
         return $this;
     }
 
+    public function whereLike($column, $value) {
+        $this->where[] = "{$column} like '{$value}'";
+
+        return $this;
+    }
+
     public function whereNull($column)
     {
         $this->where[] = "{$column} IS NULL";
@@ -90,7 +96,6 @@ class QueryBuilder {
     }
 
     /**
-     *
      *
      *
      * @param mixed ...$columns
