@@ -5,6 +5,7 @@ namespace App\Core\Database;
 use \PDO;
 
 class QueryBuilder {
+
     protected $pdo;
 
     protected $table;
@@ -20,6 +21,7 @@ class QueryBuilder {
 
 	public function __construct(PDO $pdo) {
 		$this->pdo = $pdo;
+		$this->where = new Where();
 	}
 
 	public function from($name = null) {
@@ -50,19 +52,11 @@ class QueryBuilder {
         // Multiple Where
         if (count($data) == 1 && is_array($data[0])) {
             foreach ($data[0] as $column => $value) {
-                $this->where[] = "$column = $value";
+                $this->where->add($column, $value);
             }
         }
 
-        // Simple where
-        if (count($data) == 2) {
-            $this->where[] = implode(' = ', $data);
-        }
-
-        // where condition specified
-        if (count($data) == 3) {
-            $this->where[] = implode(' ', $data);
-        }
+        $this->where->add(...$data);
 
         return $this;
     }
@@ -127,6 +121,8 @@ class QueryBuilder {
      */
 	public function get()
     {
+        dd($this->where());
+
         if (!$this->sql) {
             $this->prepareSelect();
         }
@@ -243,9 +239,9 @@ class QueryBuilder {
             $joins = implode(' ', $this->joins);
         }
 
-        if ($this->where) {
-            $where = 'WHERE '. implode(' AND ', $this->where);
-        }
+//        if ($this->where) {
+//            $where = 'WHERE '. implode(' AND ', $this->where);
+//        }
 
         if ($this->limit) {
             $limit = "TOP {$this->limit} ";
