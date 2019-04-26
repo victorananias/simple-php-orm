@@ -2,15 +2,19 @@
 
 namespace Tests\Feature;
 
-require(__DIR__.'/../../core/database/QueryBuilder.php');
+require(__DIR__.'/../../index.php');
 
 use PHPUnit\Framework\TestCase;
-use App\Core\Database\QueryBuilder;
 
 class QueryBuilderTest extends TestCase
 {
     public function testSelect()
     {
-    }
+        $sql = db()->from('mytable')
+            ->where('id', 2)
+            ->where('name', 'like', 'eita')
+            ->toSql();
 
+        $this->assertEquals($sql, 'select * from mytable where id = ? and name like ?');
+    }
 }

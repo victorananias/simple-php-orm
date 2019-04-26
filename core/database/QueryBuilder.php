@@ -11,35 +11,46 @@ class QueryBuilder {
     protected $table;
     protected $sql = '';
 
+    protected $where;
+    
     protected $limit;
     protected $joins = [];
-    protected $where = [];
     protected $columns = [];
     protected $group = [];
     protected $insert = [];
     protected $order = [];
+    protected $params = [];
 
-	public function __construct(PDO $pdo) {
-		$this->pdo = $pdo;
-		$this->where = new Where();
-	}
-
-	public function from($name = null) {
-	    return $this->table($name);
+    public function __construct(PDO $pdo) {
+        $this->pdo = $pdo;
+        $this->where = new Where();
     }
 
     /**
+     * set table name
+     *
+     * @param string $name
+     * @return void
+     */
+    public function from($name = null) {
+        return $this->table($name);
+    }
+
+    /**
+     * 
+     * set table name
+     * 
      * @param string $name
      * @return $this
      */
-	public function table($name = null) {
-	    if (!$name) {
-	        die('Table name not specified.');
+    public function table($name = null) {
+        if (!$name) {
+            die('Table name not specified.');
         }
 
-	    $this->table = $name;
+        $this->table = $name;
 
-	    return $this;
+        return $this;
     }
 
     public function limit($limit= 10) {
@@ -47,11 +58,18 @@ class QueryBuilder {
         return $this;
     }
 
+    /**
+     * add where conditions
+     *
+     * @param mixed ...$data
+     * @return \App\Core\Database\QueryBuilder
+     */
     public function where(...$data)
     {
         // Multiple Where
         if (count($data) == 1 && is_array($data[0])) {
             $this->where->addMultiple($data);
+            return $this;
         }
 
         $this->where->add(...$data);
@@ -59,30 +77,49 @@ class QueryBuilder {
         return $this;
     }
 
+    /**
+     * add where like condition
+     *
+     * @param string $column
+     * @param string $value
+     * @return \App\Core\Database\QueryBuilder
+     */
     public function whereLike($column, $value) {
-        $this->where[] = "{$column} like '{$value}'";
-
+        $this->where->add($column, 'like' , $value);
         return $this;
     }
 
+    /**
+     * add where null condition
+     *
+     * @param string $column
+     * @return \App\Core\Database\QueryBuilder
+     */
     public function whereNull($column)
     {
-        $this->where[] = "{$column} IS NULL";
+        $this->where->add("{$column} is null");
         return $this;
     }
 
+    /**
+     * add where not null condition
+     *
+     * @param string $column
+     * @param string $value
+     * @return \App\Core\Database\QueryBuilder
+     */
     public function whereNotNull($column)
     {
-        $this->where[] = "{$column} IS NOT NULL";
+        $this->where->add("{$column} is not null");
         return $this;
     }
 
-	public function all() {
-	    $this->sql = "SELECT * FROM {$this->table}";
-	    return $this->fetchAll();
-	}
+    public function all() {
+        $this->sql = "select * from {$this->table}";
+        return $this->fetchAll();
+    }
 
-	public function groupBy(...$columns) {
+    public function groupBy(...$columns) {
         $this->group = $columns;
         return $this;
     }
@@ -93,13 +130,13 @@ class QueryBuilder {
      * @param mixed ...$columns
      * @return $this
      */
-	public function select(...$columns)
+    public function select(...$columns)
     {
-	    $this->columns = $columns;
-	    return $this;
-	}
+        $this->columns = $columns;
+        return $this;
+    }
 
-	public function pluck($column)
+    public function pluck($column)
     {
         $this->prepareSelect();
 
@@ -117,10 +154,8 @@ class QueryBuilder {
     /**
      *
      */
-	public function get()
+    public function get()
     {
-        dd($this->where());
-
         if (!$this->sql) {
             $this->prepareSelect();
         }
@@ -150,51 +185,48 @@ class QueryBuilder {
     }
 
     public function create($data = []) {
-		$sql = sprintf(
-			"INSERT INTO %s(%s) values(%s)",
-			$this->table,
-			implode(', ', array_keys($data)),
+        $sql = sprintf(
+            "INSERT INTO %s(%s) values(%s)",
+            $this->table,
+            implode(', ', array_keys($data)),
             substr(str_repeat('?, ', count($data)), 0, -2)
-		);
+        );
 
-		$this->insert = array_values($data);
+        $this->insert = array_values($data);
 
-		try {
-			$statement = $this->pdo->prepare($sql);
-			$statement->execute($this->insert);
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute($this->insert);
 
-		} catch(\PDOException $e) {
-			die($e->getMessage());
-		}
-	}
+        } catch(\PDOException $e) {
+            die($e->getMessage());
+        }
+    }
 
-	public function orderBy($column, $type = 'ASC')
+    public function orderBy($column, $type = 'ASC')
     {
         $this->order = compact(['column', 'type']);
         return $this;
     }
 
-	public function update($data)
+    public function update($data)
     {
-		$columns = implode( ' = ?, ', array_keys($data)). ' = ? ';
+        $columns = implode( ' = ?, ', array_keys($data)). ' = ? ';
+        
+        $where = $this->where->sql();
 
-		$where = '';
-        if ($this->where) {
-            $where = 'WHERE '. implode(' AND ', $this->where);
+        $sql = sprintf("UPDATE %s SET %s %s", $this->table, $columns, $where);
+
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute(array_values($data));
+
+        } catch(\PDOException $e) {
+            die($e->getMessage());
         }
+    }
 
-		$sql = sprintf("UPDATE %s SET %s %s", $this->table, $columns, $where);
-
-    	try {
-			$statement = $this->pdo->prepare($sql);
-			$statement->execute(array_values($data));
-
-		} catch(\PDOException $e) {
-			die($e->getMessage());
-		}
-	}
-
-	public function raw($sql) {
+    public function raw($sql) {
         $this->sql = $sql;
         return $this;
     }
@@ -212,58 +244,60 @@ class QueryBuilder {
 //		}
 //	}
 
-	public function toSql() {
-	    $this->prepareSelect();
-	    return $this->sql;
+    public function toSql() {
+        $this->prepareSelect();
+        return $this->sql;
     }
 
     /**
      *  Prepare select query
      */
-	protected function prepareSelect() {
-	    $this->sql = '';
-        $joins = '';
+    protected function prepareSelect() {
+        $this->sql = '';
+
         $where = '';
-        $columns = '*';
+        $joins = '';
+        $columns = ' *';
         $limit = '';
         $order = '';
         $groupBy = '';
 
         if ($this->columns) {
-            $columns = implode(', ', $this->columns);
+            $columns = ' ' . implode(', ', $this->columns);
         }
 
         if ($this->joins) {
             $joins = implode(' ', $this->joins);
         }
 
-//        if ($this->where) {
-//            $where = 'WHERE '. implode(' AND ', $this->where);
-//        }
+        if ($this->where->sql()) {
+            $where = ' ' . $this->where->sql();
+            $this->params += $this->where->params();
+        } 
 
         if ($this->limit) {
-            $limit = "TOP {$this->limit} ";
+            $limit = " top {$this->limit}";
         }
 
         if ($this->order) {
-            $order = "ORDER BY {$this->order['column']} {$this->order['type']}";
+            $order = " by {$this->order['column']} {$this->order['type']}";
         }
 
         if ($this->group) {
-            $groupBy = 'GROUP BY ' . implode(', ', $this->group);
+            $groupBy = ' group by' . implode(', ', $this->group);
         }
 
-        $this->sql = "SELECT {$limit}{$columns} FROM {$this->table} {$joins} {$where} {$groupBy} {$order}";
+        $this->sql = "select{$limit}{$columns} from {$this->table}{$joins}{$where}{$groupBy}{$order}";
 
         return $this;
     }
 
     public function count() {
-	    $this->columns = ['count(*)'];
+        $this->columns = ['count(*)'];
 
-	    $this->prepareSelect();
+        $this->prepareSelect();
 
-	    return $this->fetchColumn();
+        return $this->fetchColumn();
     }
 
     /**
@@ -272,11 +306,11 @@ class QueryBuilder {
      *
      * @return array
      */
-	protected function fetchAll()
+    protected function fetchAll()
     {
         try {
             $statement = $this->pdo->prepare($this->sql);
-            $statement->execute();
+            $statement->execute($this->params);
 
             return $statement->fetchAll(PDO::FETCH_OBJ);
 
@@ -291,7 +325,7 @@ class QueryBuilder {
      *
      * @return array
      */
-	protected function fetch()
+    protected function fetch()
     {
         try {
             $statement = $this->pdo->prepare($this->sql);
@@ -310,7 +344,7 @@ class QueryBuilder {
      *
      * @return array
      */
-	protected function fetchColumn($columnNumber = 0)
+    protected function fetchColumn($columnNumber = 0)
     {
         try {
             $statement = $this->pdo->prepare($this->sql);

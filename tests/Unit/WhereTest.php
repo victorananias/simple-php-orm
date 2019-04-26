@@ -23,7 +23,7 @@ class WhereTest extends TestCase
         $this->assertCount( 2, $where->params());
     }
 
-    public function testOperatorWhere()
+    public function testOperator()
     {
         $where = new \App\Core\Database\Where();
 
@@ -33,7 +33,7 @@ class WhereTest extends TestCase
         $this->assertCount( 1, $where->params());
     }
 
-    public function testMultipleWhere()
+    public function testMultiple()
     {
         $where = new \App\Core\Database\Where();
 
@@ -45,5 +45,24 @@ class WhereTest extends TestCase
         
         $this->assertEquals($where->sql(), 'where id = ? and name like ? and product_id is not null');
         $this->assertCount(2, $where->params());
+    }
+
+    public function testEmpty()
+    {
+        $where = new \App\Core\Database\Where();
+        
+        $this->assertEquals($where->sql(), '');
+        $this->assertCount(0, $where->params());
+    }
+
+    public function testIsNull()
+    {
+        $where = new \App\Core\Database\Where();
+
+        $where->add("column is null");
+        
+        $this->assertEquals($where->sql(), 'where column is null');
+        $this->assertCount(0, $where->params());
+
     }
 }

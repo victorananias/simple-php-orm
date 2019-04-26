@@ -10,6 +10,10 @@ class Where
 
     public function add(...$data)
     {
+        if (count($data) == 1) {
+            $this->conditions[] = $data[0];
+        }
+
         if (count($data) == 2) {
             $this->conditions[] = "{$data[0]} = ?";
             $this->params[] = $data[1];
@@ -26,7 +30,14 @@ class Where
 
         foreach ($where as $column => $value) {
             if (is_numeric($column)) {
-                $this->conditions[] = "{$data[0]} = ?";
+                $this->conditions[] = $value;
+                continue;
+            }
+
+            if (preg_match('/\b(like)\b/', $column)) {
+                $this->conditions[] = $column . ' ?';
+                $this->params[] = $value;
+                continue;
             }
 
             $this->add($column, $value);
@@ -35,10 +46,12 @@ class Where
 
     public function sql()
     {
-        return 'where ' . array_reduce($this->conditions, function ($t, $i) {
+        $where =  array_reduce($this->conditions, function ($t, $i) {
             if (!$t) return $i;
             return "{$t} and {$i}";
         });
+
+        return $where ?  'where '. $where : '';
     }
 
     public function params()
