@@ -21,11 +21,23 @@ class Where
         }
     }
 
+    public function addMultiple($where = [])
+    {
+
+        foreach ($where as $column => $value) {
+            if (is_numeric($column)) {
+                $this->conditions[] = "{$data[0]} = ?";
+            }
+
+            $this->add($column, $value);
+        }
+    }
+
     public function sql()
     {
-        return 'WHERE ' . array_reduce($this->conditions, function ($t, $i) {
+        return 'where ' . array_reduce($this->conditions, function ($t, $i) {
             if (!$t) return $i;
-            return "{$t} AND {$i}";
+            return "{$t} and {$i}";
         });
     }
 

@@ -51,9 +51,7 @@ class QueryBuilder {
     {
         // Multiple Where
         if (count($data) == 1 && is_array($data[0])) {
-            foreach ($data[0] as $column => $value) {
-                $this->where->add($column, $value);
-            }
+            $this->where->addMultiple($data);
         }
 
         $this->where->add(...$data);
