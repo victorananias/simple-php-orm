@@ -2,9 +2,9 @@
 
 function dd($dados)
 {
-    echo "<pre>";
+    echo '<pre>';
     print_r($dados);
-    echo "</pre>";
+    echo '</pre>';
     die();
 }
 
@@ -22,7 +22,7 @@ function back()
 function redirect($url = null)
 {
     if (empty($url)) {
-        header("HTTP/1.0 404 Not Found");
+        header('HTTP/1.0 404 Not Found');
         echo '404 Not Found';
         return;
     }
@@ -31,15 +31,18 @@ function redirect($url = null)
     return;
 }
 
-function post($index) {
+function post($index)
+{
     return isset($_POST[$index]) ? $_POST[$index] : null;
 }
 
-function get($index) {
+function get($index)
+{
     return isset($_GET[$index]) ? $_GET[$index] : null;
 }
 
-function request($index = null) {
+function request($index = null)
+{
     if (!$index) {
         return [
             'post' => $_POST,

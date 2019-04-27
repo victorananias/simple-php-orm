@@ -42,12 +42,12 @@ class Router
 
     public function redirect($uri, $requestType)
     {
-        if(array_key_exists($uri, $this->routes[$requestType])) {
+        if (array_key_exists($uri, $this->routes[$requestType])) {
             return $this->executeAction(
                 ...explode('@', $this->routes[$requestType][$uri])
             );
         }
-        throw new Exception("URI solicitada não existe.");
+        throw new Exception('URI solicitada não existe.');
     }
 
     protected function executeAction($controller, $method)
@@ -56,7 +56,7 @@ class Router
         $controller = new $controller;
 
         if (!method_exists($controller, $method)) {
-            throw new Exception("Método não encontrado.");
+            throw new Exception('Método não encontrado.');
         }
 
         return $controller->$method();
