@@ -2,29 +2,42 @@
 
 namespace App\Core\Database;
 
+use App\Core\Database\Queriable\{
+    Select,
+    Where,
+    Update,
+    Insert,
+    OrderBy
+};
+
 use \PDO;
 
 class QueryBuilder
 {
+    protected $pdo;
+
     protected $table;
     protected $sql = '';
 
     protected $stmt;
     protected $where;
     protected $select;
+    protected $orderBy;
 
     protected $limit = null;
     protected $joins = [];
     protected $groupBy = [];
-    protected $order = [];
     protected $params = [];
 
     public function __construct(PDO $pdo)
     {
+        $this->pdo = $pdo;
+        
         $this->stmt = new Statement($pdo);
 
         $this->select = new Select();
         $this->where = new Where();
+        $this->orderBy = new OrderBy();
     }
 
     public function testing()
@@ -125,9 +138,15 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * fetch all the rows on the given table
+     *
+     * @return void
+     */
     public function all()
     {
-        return $this->stmt("select * from {$this->table}")->fetchAll();
+        $this->select->from($this->table);
+        return $this->stmt->setQuery("$this->select")->fetchAll();
     }
 
     public function groupBy(...$columns)
@@ -144,23 +163,23 @@ class QueryBuilder
      */
     public function select(...$columns)
     {
-        $this->select->setColumns($columns);
+        $this->select = new Select($columns);
         return $this;
     }
 
     public function pluck($column)
     {
-        $this->sql = $this->select->prepare($this->table, $this->where);
+        // $this->sql = $this->select->prepare($this->table, $this->where);
 
-        $result = $this->stmt->setQuery($this->sql)->fetchAll($this->select->params());
+        // $result = $this->stmt->setQuery($this->sql)->fetchAll($this->select->params());
 
-        if (count($result) == 0) {
-            return [];
-        }
+        // if (count($result) == 0) {
+        //     return [];
+        // }
 
-        return array_map(function ($i) use ($column) {
-            return $i->$column;
-        }, $result);
+        // return array_map(function ($i) use ($column) {
+        //     return $i->$column;
+        // }, $result);
     }
 
     /**
@@ -168,20 +187,23 @@ class QueryBuilder
      */
     public function get()
     {
-        $this->sql = $this->select->prepare($this->table, $this->where);
+        $this->select
+            ->from($this->table)
+            ->where($this->where)
+            ->orderBy($this->orderBy);
 
-        return $this->stmt->setQuery($this->sql)->fetchAll($this->select->params());
+        return $this->stmt->setQuery("$this->select")->fetchAll($this->select->params());
     }
 
     public function first()
     {
-        $this->limit = 1;
+        // $this->limit = 1;
 
-        $this->sql = $this
-            ->select
-            ->prepare($this->table, $this->where, $this->joins, 1, $this->order, $this->groupBy);
+        // $this->sql = $this
+        //     ->select
+        //     ->prepare($this->table, $this->where, $this->joins, 1, $this->order, $this->groupBy);
 
-        return $this->stmt->setQuery($this->sql)->fetch();
+        // return $this->stmt->setQuery($this->sql)->fetch();
     }
 
     /**
@@ -198,15 +220,27 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * records the given data on the given table
+     *
+     * @param array $data
+     * @return void
+     */
     public function create($data = [])
     {
         $insert = new Insert($this->table, $data);
-        return $this->stmt->setQuery($insert)->execute($insert->params());
+        return $this->stmt->setQuery("$insert")->execute($insert->params());
     }
 
-    public function orderBy($column, $type = 'asc')
+    public function orderBy($column, $type = null)
     {
-        $this->order = compact(['column', 'type']);
+        if (!$this->orderBy) {
+            $this->orderBy = new OrderBy($column, $type);
+            return $this;
+        }
+        
+        $this->orderBy->add($column, $type);
+
         return $this;
     }
 
@@ -247,15 +281,13 @@ class QueryBuilder
 
     public function toSql()
     {
-        $this->sql = $this->select->prepare($this->table, $this->where);
-
-        return $this->sql;
+        return $this->testing();
     }
 
-    public function count()
-    {
-        $this->select->setColumns(['count(*)'])->prepare($this->table, $this->where);
+    // public function count()
+    // {
+    //     $this->select->setColumns(['count(*)'])->prepare($this->table, $this->where);
 
-        return $this->stmt->setQuery($this->select)->fetchColumn($this->select->params());
-    }
+    //     return $this->stmt->setQuery("$this->select")->fetchColumn($this->select->params());
+    // }
 }

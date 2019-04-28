@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Database;
+namespace App\Core\Database\Queriable;
 
 class Where
 {
@@ -42,7 +42,12 @@ class Where
         }
     }
 
-    public function sql()
+    public function params()
+    {
+        return $this->params;
+    }
+
+    public function __toString()
     {
         $where = array_reduce($this->conditions, function ($t, $i) {
             if (!$t) {
@@ -52,15 +57,5 @@ class Where
         });
 
         return $where ? 'where ' . $where : '';
-    }
-
-    public function __toString()
-    {
-        return $this->sql() ? ' ' . $this->sql() : '';
-    }
-
-    public function params()
-    {
-        return $this->params;
     }
 }
