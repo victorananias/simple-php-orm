@@ -156,7 +156,7 @@ class QueryBuilder
     }
 
     /**
-     *
+     * adds the columns to the select query
      *
      * @param mixed ...$columns
      * @return $this

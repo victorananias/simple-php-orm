@@ -10,8 +10,10 @@ class Select
 
     protected $where;
     protected $orderBy;
+    protected $groupBy;
+    protected $joins = [];
 
-    public function __construct($columns = ['*'])
+    public function __construct(array $columns = ['*'])
     {
         if (!$columns) {
             return $this;
@@ -28,9 +30,9 @@ class Select
      * @param string $table
      * @return void
      */
-    public function from($table)
+    public function from($table, $alias = null)
     {
-        $this->table = $table;
+        $this->table = $table . ($alias ?  " as {$alias}" : '');
         return $this;
     }
 
@@ -46,6 +48,16 @@ class Select
         return $this;
     }
 
+    public function groupBy(GroupBy $groupBy)
+    {
+        $this->groupBy = $groupBy;
+    }
+
+    public function join(Join $join)
+    {
+        $this->joins[] = $join->__toString();
+    }
+
     /**
      * receives the OrderBy class
      *
@@ -58,6 +70,11 @@ class Select
         return $this;
     }
 
+    /**
+     * returns the select params
+     *
+     * @return void
+     */
     public function params()
     {
         return $this->params;
@@ -87,11 +104,20 @@ class Select
     public function __toString()
     {
         $query = "select {$this->getColumnsString()} from {$this->table}";
+        
+        if ($this->joins != []) {
+            $query .= ' ' . implode(' ', $this->joins);
+        } 
+
+        if ("$this->groupBy") {
+            $query .= ' ' . $this->groupBy;
+            $this->addParams($this->groupBy);
+        }
 
         if ("$this->where") {
             $query .= ' ' . $this->where;
             $this->addParams($this->where);
-        } 
+        }
         
         if ("$this->orderBy") {
             $query .= ' ' . $this->orderBy;

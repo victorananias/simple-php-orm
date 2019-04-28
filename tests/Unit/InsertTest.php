@@ -8,7 +8,8 @@ use Tests\TestCase;
 
 class InsertTest extends TestCase
 {
-    public function testInserting()
+    /** @test */
+    public function it_prepares_the_insert_query()
     {
         $insert = new Insert('mytable', [
             'name' => 'this is the name',
@@ -19,7 +20,8 @@ class InsertTest extends TestCase
         $this->assertCount(2, $insert->params());
     }
 
-    public function testMultiple()
+    /** @test */
+    public function it_prepares_multiples_inserts()
     {
         $insert = new Insert('mytable');
 

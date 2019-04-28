@@ -47,15 +47,19 @@ class Where
         return $this->params;
     }
 
-    public function __toString()
+    public function conditions()
     {
-        $where = array_reduce($this->conditions, function ($t, $i) {
+        return array_reduce($this->conditions, function ($t, $i) {
             if (!$t) {
                 return $i;
             }
+
             return "{$t} and {$i}";
         });
+    }
 
-        return $where ? 'where ' . $where : '';
+    public function __toString()
+    {
+        return ($this->conditions() ? 'where ' . $this->conditions() : '');
     }
 }

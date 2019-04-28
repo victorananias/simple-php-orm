@@ -12,7 +12,7 @@ class OrderByTest extends TestCase
     {
         $orderBy = new OrderBy('name');
 
-        $this->assertEquals($orderBy->__toString(), 'order by name');
+        $this->assertEquals('order by name', $orderBy->__toString());
     }
     
     /** @test */
@@ -20,7 +20,7 @@ class OrderByTest extends TestCase
     {
         $orderBy = new OrderBy('name', 'desc');
 
-        $this->assertEquals($orderBy->__toString(), 'order by name desc');
+        $this->assertEquals('order by name desc', $orderBy->__toString());
     }
     
     /** @test */
@@ -30,7 +30,7 @@ class OrderByTest extends TestCase
 
         $orderBy->add('id');
 
-        $this->assertEquals($orderBy->__toString(), 'order by name desc, id');
+        $this->assertEquals('order by name desc, id', $orderBy->__toString());
     }
 
 }

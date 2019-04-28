@@ -7,18 +7,20 @@ use App\Core\Database\Queriable\Where;
 
 class WhereTest extends TestCase
 {
-    public function testSimpleWhere()
+
+    /** @test */
+    public function it_creates_conditions()
     {
         $where = new Where();
 
         $where->add('id', 2);
 
-        $this->assertEquals($where->__toString(), 'where id = ?');
+        $this->assertEquals('where id = ?', $where->__toString());
         $this->assertCount(1, $where->params());
 
         $where->add('product_id', 2);
 
-        $this->assertEquals($where->__toString(), 'where id = ? and product_id = ?');
+        $this->assertEquals('where id = ? and product_id = ?', $where->__toString());
         $this->assertCount(2, $where->params());
     }
 
@@ -28,7 +30,7 @@ class WhereTest extends TestCase
 
         $where->add('id', '>', 2);
 
-        $this->assertEquals($where->__toString(), 'where id > ?');
+        $this->assertEquals('where id > ?', $where->__toString());
         $this->assertCount(1, $where->params());
     }
 
@@ -43,7 +45,7 @@ class WhereTest extends TestCase
             'date >' => '2019-04-02'
         ]);
 
-        $this->assertEquals($where->__toString(), 'where id = ? and name like ? and product_id is not null and date > ?');
+        $this->assertEquals('where id = ? and name like ? and product_id is not null and date > ?', $where->__toString());
         $this->assertCount(3, $where->params());
     }
 
@@ -51,7 +53,7 @@ class WhereTest extends TestCase
     {
         $where = new Where();
 
-        $this->assertEquals($where->__toString(), '');
+        $this->assertEquals('', $where->__toString());
         $this->assertCount(0, $where->params());
     }
 
@@ -61,7 +63,19 @@ class WhereTest extends TestCase
 
         $where->add('column is null');
 
-        $this->assertEquals($where->__toString(), 'where column is null');
+        $this->assertEquals('where column is null', $where->__toString());
         $this->assertCount(0, $where->params());
+    }
+
+    /** @test */
+    public function it_returns_only_the_conditions() 
+    {
+        $where = new Where();
+
+        $where->add('id', 2);
+        $where->add('product_id', 2);
+
+        $this->assertEquals('id = ? and product_id = ?', $where->conditions());
+        $this->assertCount(2, $where->params());
     }
 }
