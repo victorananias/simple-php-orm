@@ -7,7 +7,8 @@ use App\Core\Database\Queriable\{
     Where,
     Update,
     Insert,
-    OrderBy
+    OrderBy,
+    Join
 };
 
 use \PDO;
@@ -17,15 +18,16 @@ class QueryBuilder
     protected $pdo;
 
     protected $table;
+    protected $tableAlias;
     protected $sql = '';
 
     protected $stmt;
     protected $where;
     protected $select;
     protected $orderBy;
+    protected $joins = [];
 
     protected $limit = null;
-    protected $joins = [];
     protected $groupBy = [];
     protected $params = [];
 
@@ -64,13 +66,14 @@ class QueryBuilder
      * @param string $name
      * @return $this
      */
-    public function table($name = null)
+    public function table($name = null, $alias = null)
     {
         if (!$name) {
             die('Table name not specified.');
         }
 
         $this->table = $name;
+        $this->tableAlias = $alias;
 
         return $this;
     }
@@ -192,6 +195,10 @@ class QueryBuilder
             ->where($this->where)
             ->orderBy($this->orderBy);
 
+        foreach ($this->joins as $join) {
+            $this->select->join($join);
+        }
+
         return $this->stmt->setQuery("$this->select")->fetchAll($this->select->params());
     }
 
@@ -207,16 +214,25 @@ class QueryBuilder
     }
 
     /**
-     * @param $table
-     * @param $column1
-     * @param $condition
-     * @param $column2
-     * @param string $type
-     * @return $this
+     * join
+     *
+     * @param string ...$params
+     * @return QueryBuilder
      */
-    public function join($table, $column1, $condition, $column2, $type = 'inner')
+    public function join(...$params)
     {
-        $this->joins[] = "{$type} join {$table} on {$column1} {$condition} {$column2}";
+        $join = new Join($params[0]);
+        
+        if (count($params) == 3) {
+            $join->on($params[1], $params[2]);
+        }
+
+        if (count($params) == 4) {
+            $join->on($params[1], $params[2], $params[3]);
+        }
+
+        $this->joins[] = $join;
+
         return $this;
     }
 
