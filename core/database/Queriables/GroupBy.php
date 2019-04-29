@@ -13,11 +13,6 @@ class GroupBy extends Join
         $this->where = new Where();
     }
 
-    public function column($column)
-    {
-        $this->columns[] = $column;
-    }
-
     public function having(...$columns)
     {
         $this->where->add(...$columns);

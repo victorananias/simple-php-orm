@@ -21,19 +21,22 @@ class SelectTest extends TestCase
     }
 
     /** @test */
-    public function it_accepts_an_array_of_columns()
+    public function it_accepts_multiple_columns()
     {
-        $select = new Select(['id','name']);
+        $select = new Select();
+
+        $select->columns('id', 'name');
 
         $select->from('mytable');
-        
+
         $this->assertEquals('select id, name from mytable', $select->__toString());
     }
 
     /** @test */
     public function it_accepts_where_conditions()
     {
-        $select = new Select(['id']);
+        $select = new Select();
+        $select->columns('id');
         $select->from('mytable');
 
         $where = new Where;
@@ -41,7 +44,7 @@ class SelectTest extends TestCase
         $where->add('name', 'like', 'john');
 
         $select->where($where);
-        
+
         $this->assertEquals('select id from mytable where product_id = ? and name like ?', $select->__toString());
         $this->assertCount(2, $select->params());
     }
@@ -50,7 +53,7 @@ class SelectTest extends TestCase
     public function it_accepts_order_by()
     {
         $select = new Select();
-        
+
         $select->from('mytable');
 
         $orderBy = new OrderBy('name', 'desc');
@@ -82,13 +85,15 @@ class SelectTest extends TestCase
 
         $join2 = new Join('table3 as t3');
         $join2->on('t3.id', 'm.table3_id');
+        $join2->where('t3.value', '>', 2);
 
         $select->join($join2);
 
         $this->assertEquals(
-            'select * from mytable as m join table2 as t2 on t2.id = m.table2_id join table3 as t3 on t3.id = m.table3_id', 
+            'select * from mytable as m join table2 as t2 on t2.id = m.table2_id join table3 as t3 on t3.id = m.table3_id and t3.value > ?',
             $select->__toString()
         );
+        $this->assertCount(1, $select->params());
     }
 
     /** @test */
@@ -110,7 +115,9 @@ class SelectTest extends TestCase
     /** @test */
     public function it_can_be_complex()
     {
-        $select = new Select(['id', 'name', 'count(product_id) as products_count']);
+        $select = new Select();
+        $select->columns('id', 'name', 'count(product_id) as products_count');
+        
         $select->from('mytable', 'm');
 
         $join1 = new Join('table2 as t2');
@@ -135,14 +142,13 @@ class SelectTest extends TestCase
 
         $this->assertEquals(
             'select id, name, count(product_id) as products_count '
-            .'from mytable as m '
-            .'join table2 as t2 on t2.id = m.table2_id and t2.id <> ? '
-            .'left join table3 as t3 on t3.id = m.table3_id ' 
-            .'group by id, name having count(product_id) > ? '
-            .'where name like ? '
-            .'order by name desc', 
+            . 'from mytable as m '
+            . 'join table2 as t2 on t2.id = m.table2_id and t2.id <> ? '
+            . 'left join table3 as t3 on t3.id = m.table3_id '
+            . 'where name like ? '
+            . 'group by id, name having count(product_id) > ? '
+            . 'order by name desc',
             $select->__toString()
         );
-
     }
 }

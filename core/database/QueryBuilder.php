@@ -2,16 +2,14 @@
 
 namespace App\Core\Database;
 
-use App\Core\Database\Queriable\{
-    Select,
-    Where,
-    Update,
-    Insert,
-    OrderBy,
-    Join
-};
-
+use App\Core\Database\Queriable\Select;
+use App\Core\Database\Queriable\Where;
+use App\Core\Database\Queriable\Update;
+use App\Core\Database\Queriable\Insert;
+use App\Core\Database\Queriable\OrderBy;
+use App\Core\Database\Queriable\Join;
 use \PDO;
+use App\Core\Database\Queriable\GroupBy;
 
 class QueryBuilder
 {
@@ -28,13 +26,12 @@ class QueryBuilder
     protected $joins = [];
 
     protected $limit = null;
-    protected $groupBy = [];
     protected $params = [];
 
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
-        
+
         $this->stmt = new Statement($pdo);
 
         $this->select = new Select();
@@ -72,7 +69,7 @@ class QueryBuilder
             die('Table name not specified.');
         }
 
-        $this->table = $alias ? $table.' as '. $alias : $table;
+        $this->table = $alias ? $table . ' as ' . $alias : $table;
 
         return $this;
     }
@@ -153,7 +150,7 @@ class QueryBuilder
 
     public function groupBy(...$columns)
     {
-        $this->groupBy = $columns;
+        $this->select->groupBy(new GroupBy(...$columns));
         return $this;
     }
 
@@ -165,7 +162,7 @@ class QueryBuilder
      */
     public function select(...$columns)
     {
-        $this->select = new Select($columns);
+        $this->select->columns(...$columns);
         return $this;
     }
 
@@ -223,9 +220,9 @@ class QueryBuilder
         $join = new Join($params[0]);
 
         if (count($params) == 2) {
-            return $params[1]($join);
+            $params[1]($join);
         }
-        
+
         if (count($params) == 3) {
             $join->on($params[1], $params[2]);
         }
@@ -257,7 +254,7 @@ class QueryBuilder
             $this->orderBy = new OrderBy($column, $type);
             return $this;
         }
-        
+
         $this->orderBy->add($column, $type);
 
         return $this;

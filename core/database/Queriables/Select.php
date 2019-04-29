@@ -4,7 +4,7 @@ namespace App\Core\Database\Queriable;
 
 class Select
 {
-    public $columns;
+    public $columns = ['*'];
     public $params = [];
     public $table;
 
@@ -13,12 +13,8 @@ class Select
     protected $groupBy;
     protected $joins = [];
 
-    public function __construct(array $columns = ['*'])
+    public function columns(...$columns)
     {
-        if (!$columns) {
-            return $this;
-        }
-
         $this->columns = $columns;
 
         return $this;
@@ -32,7 +28,7 @@ class Select
      */
     public function from($table, $alias = null)
     {
-        $this->table = $table . ($alias ?  " as {$alias}" : '');
+        $this->table = $table . ($alias ? " as {$alias}" : '');
         return $this;
     }
 
@@ -55,7 +51,7 @@ class Select
 
     public function join(Join $join)
     {
-        $this->joins[] = $join->__toString();
+        $this->joins[] = $join;
     }
 
     /**
@@ -104,24 +100,29 @@ class Select
     public function __toString()
     {
         $query = "select {$this->getColumnsString()} from {$this->table}";
-        
-        if ($this->joins != []) {
-            $query .= ' ' . implode(' ', $this->joins);
-        } 
 
-        if ("$this->groupBy") {
-            $query .= ' ' . $this->groupBy;
-            $this->addParams($this->groupBy);
+        if ($this->joins != []) {
+
+            foreach ($this->joins as $j) {
+                $this->addParams($j);
+            }
+
+            $query .= ' ' . implode(' ', $this->joins);
         }
 
         if ("$this->where") {
             $query .= ' ' . $this->where;
             $this->addParams($this->where);
         }
-        
+
+        if ("$this->groupBy") {
+            $query .= ' ' . $this->groupBy;
+            $this->addParams($this->groupBy);
+        }
+
         if ("$this->orderBy") {
             $query .= ' ' . $this->orderBy;
-        } 
+        }
 
         return $query;
     }

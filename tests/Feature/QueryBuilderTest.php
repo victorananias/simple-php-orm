@@ -60,9 +60,10 @@ class QueryBuilderTest extends TestCase
             ->get();
 
         $this->assertEquals($result['query'], 'select * from mytable as m join table as t on t.id = m.table_id');
-        
+
         $this->assertCount(0, $result['params']);
     }
+
     /** @test */
     public function it_joins_selects_with_conditions()
     {
@@ -70,11 +71,38 @@ class QueryBuilderTest extends TestCase
             ->from('mytable', 'm')
             ->join('table as t', function ($join) {
                 $join->on('t.id', 'm.table_id');
+                $join->where('t.value', '>', 2);
             })
             ->get();
 
-        $this->assertEquals($result['query'], 'select * from mytable as m join table as t on t.id = m.table_id');
-        $this->assertCount(0, $result['params']);
+        $this->assertEquals($result['query'], 'select * from mytable as m join table as t on t.id = m.table_id and t.value > ?');
+        $this->assertCount(1, $result['params']);
+    }
+
+    /** @test */
+    public function group_by()
+    {
+        $result = db()->testing()->select('id', 'name')
+            ->from('mytable')
+            ->groupBy('id', 'name')
+            ->get();
+
+        $this->assertEquals('select id, name from mytable group by id, name', $result['query']);
+
+    }
+
+    /** @test */
+    public function it_accepts_unordered_functions_when_selecting()
+    {
+        $result = db()->testing()
+            ->where('id', '!=', 2)
+            ->groupBy('id', 'name')
+            ->from('mytb')
+            ->select('id', 'name')
+            ->orderBy('id')
+            ->get();
+
+        $this->assertEquals('select id, name from mytb where id != ? group by id, name order by id', $result['query']);
     }
 
     /** @test */
@@ -85,7 +113,7 @@ class QueryBuilderTest extends TestCase
             'type' => 'test'
         ]);
 
-        $this->assertEquals($result['query'], 'insert into mytable(name, type) values(?, ?)');
+        $this->assertEquals('insert into mytable(name, type) values(?, ?)', $result['query']);
         $this->assertCount(2, $result['params']);
     }
 }
