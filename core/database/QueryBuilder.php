@@ -54,9 +54,9 @@ class QueryBuilder
      * @param string $name
      * @return void
      */
-    public function from($name = null)
+    public function from($table = null, $alias = null)
     {
-        return $this->table($name);
+        return $this->table($table, $alias);
     }
 
     /**
@@ -66,14 +66,13 @@ class QueryBuilder
      * @param string $name
      * @return $this
      */
-    public function table($name = null, $alias = null)
+    public function table($table = null, $alias = null)
     {
-        if (!$name) {
+        if (!$table) {
             die('Table name not specified.');
         }
 
-        $this->table = $name;
-        $this->tableAlias = $alias;
+        $this->table = $alias ? $table.' as '. $alias : $table;
 
         return $this;
     }
@@ -222,6 +221,10 @@ class QueryBuilder
     public function join(...$params)
     {
         $join = new Join($params[0]);
+
+        if (count($params) == 2) {
+            return $params[1]($join);
+        }
         
         if (count($params) == 3) {
             $join->on($params[1], $params[2]);

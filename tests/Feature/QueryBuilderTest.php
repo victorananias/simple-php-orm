@@ -20,10 +20,10 @@ class QueryBuilderTest extends TestCase
     {
         $result = db()->testing()
             ->select('id', 'name')
-            ->from('mytable')
+            ->from('mytable', 'm')
             ->get();
 
-        $this->assertEquals($result['query'], 'select id, name from mytable');
+        $this->assertEquals($result['query'], 'select id, name from mytable as m');
     }
 
     /** @test */
@@ -57,6 +57,20 @@ class QueryBuilderTest extends TestCase
         $result = db()->testing()
             ->from('mytable', 'm')
             ->join('table as t', 't.id', 'm.table_id')
+            ->get();
+
+        $this->assertEquals($result['query'], 'select * from mytable as m join table as t on t.id = m.table_id');
+        
+        $this->assertCount(0, $result['params']);
+    }
+    /** @test */
+    public function it_joins_selects_with_conditions()
+    {
+        $result = db()->testing()
+            ->from('mytable', 'm')
+            ->join('table as t', function ($join) {
+                $join->on('t.id', 'm.table_id');
+            })
             ->get();
 
         $this->assertEquals($result['query'], 'select * from mytable as m join table as t on t.id = m.table_id');
