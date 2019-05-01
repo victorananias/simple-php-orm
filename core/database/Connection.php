@@ -11,7 +11,7 @@ class Connection
     {
         try {
             return new PDO(
-                "{$config['connection']};Database={$config['Database']}",
+                "{$config['connection']}:Server={$config['host']},{$config['port']};Database={$config['database']}",
                 $config['username'],
                 $config['password'],
                 $config['options']

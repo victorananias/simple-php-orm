@@ -117,7 +117,7 @@ class Statement
         }
 
         try {
-            $this->pdo->prepare($this->squery)->execute($params);
+            $this->pdo->prepare($this->query)->execute($params);
         } catch (\PDOException $e) {
             die($e->getMessage());
         }

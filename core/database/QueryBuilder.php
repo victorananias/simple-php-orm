@@ -282,18 +282,13 @@ class QueryBuilder
         return $this;
     }
 
-    //	public function delete($table, $where) {
-    //		$coluna = array_keys($where)[0];
-    //		$sql = "DELETE FROM $table WHERE {$coluna}=:{$coluna}";
-//
-    //		try {
-    //			$statement = $this->pdo->prepare($sql);
-    //			$statement->execute($where);
-//
-    //		} catch(\PDOException $e) {
-    //			die($e->getMessage());
-    //		}
-    //	}
+    public function delete()
+    {
+        $delete = (new Delete())->from($this->table)->where($this->where);
+
+        $sql = "DELETE FROM {$this->table} {$this->where}";
+        return $this->stmt->setQuery($delete)->execute($delete->params());
+    }
 
     public function toSql()
     {
