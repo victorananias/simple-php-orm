@@ -74,11 +74,11 @@ class QueryBuilder
         return $this;
     }
 
-    public function limit($limit = 10)
-    {
-        $this->limit = $limit;
-        return $this;
-    }
+    // public function limit($limit = 10)
+    // {
+    //     $this->limit = $limit;
+    //     return $this;
+    // }
 
     /**
      * add where conditions
@@ -284,17 +284,11 @@ class QueryBuilder
 
     public function delete()
     {
-        $delete = (new Delete())->from($this->table)->where($this->where);
-
-        $sql = "DELETE FROM {$this->table} {$this->where}";
-        return $this->stmt->setQuery($delete)->execute($delete->params());
+        $delete = new Delete();
+        $delete->from($this->table)->where($this->where);
+        return $this->stmt->setQuery("$delete")->execute($delete->params());
     }
-
-    public function toSql()
-    {
-        return $this->testing();
-    }
-
+    
     // public function count()
     // {
     //     $this->select->setColumns(['count(*)'])->prepare($this->table, $this->where);

@@ -116,4 +116,13 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals('insert into mytable(name, type) values(?, ?)', $result['query']);
         $this->assertCount(2, $result['params']);
     }
+
+    /** @test */
+    public function it_deletes()
+    {
+        $result = db()->testing->table('mytb')->where('id', 3)->delete();
+
+        $this->assertEquals('delete from mytb where id = ?', $result['query']);
+        $this->assertCount(0, $result['params']);
+    }
 }
