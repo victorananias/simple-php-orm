@@ -10,11 +10,18 @@ class Delete
     public function from($table)
     {
         $this->table = $table;
+        return $this;
     }
 
     public function where($where)
     {
         $this->where = $where;
+        return $this;
+    }
+
+    public function params()
+    {
+        return $this->where ? $this->where->params() : []; 
     }
 
     public function __toString()
@@ -26,10 +33,5 @@ class Delete
         }
 
         return $query;
-    }
-
-    public function params()
-    {
-        return $this->where ? $this->where->params() : []; 
     }
 }

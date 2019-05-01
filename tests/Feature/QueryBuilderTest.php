@@ -120,9 +120,26 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_deletes()
     {
-        $result = db()->testing->table('mytb')->where('id', 3)->delete();
+        $result = db()->testing()->table('mytb')->where('id', 3)->delete();
 
         $this->assertEquals('delete from mytb where id = ?', $result['query']);
-        $this->assertCount(0, $result['params']);
+        $this->assertCount(1, $result['params']);
+    }
+
+    /** @test */
+    public function it_updates()
+    {
+        $result = db()
+                    ->testing()
+                    ->table('mytb')
+                    ->where([
+                        'id' => 2
+                    ])->update([
+                        'name' => 2,
+                        'type' => 'new type'
+                    ]);
+
+        $this->assertEquals('update mytb set name = ?, type = ? where id = ?', $result['query']);
+        $this->assertCount(3, $result['params']);
     }
 }

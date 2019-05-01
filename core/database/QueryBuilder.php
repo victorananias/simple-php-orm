@@ -10,6 +10,7 @@ use App\Core\Database\Queriable\OrderBy;
 use App\Core\Database\Queriable\Join;
 use \PDO;
 use App\Core\Database\Queriable\GroupBy;
+use App\Core\Database\Queriable\Delete;
 
 class QueryBuilder
 {
@@ -90,7 +91,7 @@ class QueryBuilder
     {
         // Multiple Where
         if (count($data) == 1 && is_array($data[0])) {
-            $this->where->addMultiple($data);
+            $this->where->addMultiple($data[0]);
             return $this;
         }
 
@@ -260,20 +261,16 @@ class QueryBuilder
         return $this;
     }
 
-    public function update($data)
+    public function update($data = [])
     {
-        $columns = implode(' = ?, ', array_keys($data)) . ' = ? ';
+        $update = new Update();
 
-        $where = $this->where->sql();
+        $update->table($this->table);
+        $update->where($this->where);
+        $update->set($data);
 
-        $sql = sprintf('UPDATE %s SET %s %s', $this->table, $columns, $where);
-
-        try {
-            $statement = $this->pdo->prepare($sql);
-            $statement->execute(array_values($data));
-        } catch (\PDOException $e) {
-            die($e->getMessage());
-        }
+        return $this->stmt->setQuery("$update")->execute($update->params());
+        
     }
 
     public function raw($sql)

@@ -24,7 +24,8 @@ class WhereTest extends TestCase
         $this->assertCount(2, $where->params());
     }
 
-    public function testOperator()
+    /** @test */
+    public function it_accepts_an_operator()
     {
         $where = new Where();
 
@@ -34,7 +35,9 @@ class WhereTest extends TestCase
         $this->assertCount(1, $where->params());
     }
 
-    public function testMultiple()
+
+    /** @test */
+    public function it_accepts_an_array_of_conditions()
     {
         $where = new Where();
 
