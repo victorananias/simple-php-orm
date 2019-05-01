@@ -142,4 +142,12 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals('update mytb set name = ?, type = ? where id = ?', $result['query']);
         $this->assertCount(3, $result['params']);
     }
+
+    /** @test */
+    public function it_fetchs_the_count()
+    {
+        $result = db()->testing()->from('mytb')->count();
+
+        $this->assertEquals('select count(*) from mytb limit 1', $result['query']);
+    }
 }
