@@ -2,11 +2,13 @@
 
 return [
     'database' => [
-        'connection' => "sqlsrv:Server=SERVERIP,1433",
-        'Database' => "DATABASE",
-        'charset' => "UTF-8",
-        'username' => "DBUSER",
-        'password' => "DBPASS",
+        'connection' => 'sqlsrv',
+        'host' => 'HOST',
+        'port' => '1433',
+        'database' => 'DATABASE',
+        'charset' => 'UTF-8',
+        'username' => 'DBUSER',
+        'password' => 'DBPASS',
         'options' => [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
     ]
 ];

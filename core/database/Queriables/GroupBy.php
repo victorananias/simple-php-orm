@@ -2,7 +2,7 @@
 
 namespace App\Core\Database\Queriable;
 
-class GroupBy extends Join
+class GroupBy
 {
     protected $columns = [];
     protected $where;
@@ -23,13 +23,18 @@ class GroupBy extends Join
         if ($this->columns == []) {
             return '';
         }
-        
+
         $query = 'group by ' . implode(', ', $this->columns);
 
         if ("$this->where") {
-            $query .= ' having '. $this->where->conditions();
+            $query .= ' having ' . $this->where->conditions();
         }
 
         return $query;
+    }
+
+    public function params()
+    {
+        return $this->where->params();
     }
 }

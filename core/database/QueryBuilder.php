@@ -2,13 +2,13 @@
 
 namespace App\Core\Database;
 
+use \PDO;
 use App\Core\Database\Queriable\Select;
 use App\Core\Database\Queriable\Where;
 use App\Core\Database\Queriable\Update;
 use App\Core\Database\Queriable\Insert;
 use App\Core\Database\Queriable\OrderBy;
 use App\Core\Database\Queriable\Join;
-use \PDO;
 use App\Core\Database\Queriable\GroupBy;
 use App\Core\Database\Queriable\Delete;
 
@@ -270,7 +270,6 @@ class QueryBuilder
         $update->set($data);
 
         return $this->stmt->setQuery("$update")->execute($update->params());
-        
     }
 
     public function raw($sql)
@@ -285,7 +284,7 @@ class QueryBuilder
         $delete->from($this->table)->where($this->where);
         return $this->stmt->setQuery("$delete")->execute($delete->params());
     }
-    
+
     // public function count()
     // {
     //     $this->select->setColumns(['count(*)'])->prepare($this->table, $this->where);
