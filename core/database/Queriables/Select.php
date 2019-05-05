@@ -11,6 +11,7 @@ class Select
     protected $where;
     protected $orderBy;
     protected $groupBy;
+    protected $limit;
     protected $joins = [];
 
     public function columns(...$columns)
@@ -97,6 +98,11 @@ class Select
         return implode(', ', $this->columns);
     }
 
+    public function limit($limit)
+    {
+        $this->limit = $limit;
+    }
+
     public function __toString()
     {
         $query = "select {$this->getColumnsString()} from {$this->table}";
@@ -122,6 +128,10 @@ class Select
 
         if ("$this->orderBy") {
             $query .= ' ' . $this->orderBy;
+        }
+
+        if ($this->limit) {
+            return $this->limit->exec($query);
         }
 
         return $query;

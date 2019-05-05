@@ -11,6 +11,7 @@ use App\Core\Database\Queriable\OrderBy;
 use App\Core\Database\Queriable\Join;
 use App\Core\Database\Queriable\GroupBy;
 use App\Core\Database\Queriable\Delete;
+use App\Core\Database\Queriable\Limit;
 
 class QueryBuilder
 {
@@ -75,12 +76,6 @@ class QueryBuilder
         return $this;
     }
 
-    // public function limit($limit = 10)
-    // {
-    //     $this->limit = $limit;
-    //     return $this;
-    // }
-
     /**
      * add where conditions
      *
@@ -136,6 +131,14 @@ class QueryBuilder
     {
         $this->where->add("{$column} is not null");
         return $this;
+    }
+
+    public function count()
+    {
+        $this->select->columns('count(*)')->from($this->table);
+        $this->select->limit(new Limit(1));
+
+        return $this->stmt->setQuery("$this->select")->fetchColumn();
     }
 
     /**
@@ -199,15 +202,11 @@ class QueryBuilder
         return $this->stmt->setQuery("$this->select")->fetchAll($this->select->params());
     }
 
-    public function first()
+    public function limit($limit)
     {
-        // $this->limit = 1;
+        $this->select->limit(new Limit($limit));
 
-        // $this->sql = $this
-        //     ->select
-        //     ->prepare($this->table, $this->where, $this->joins, 1, $this->order, $this->groupBy);
-
-        // return $this->stmt->setQuery($this->sql)->fetch();
+        return $this;
     }
 
     /**
@@ -285,10 +284,4 @@ class QueryBuilder
         return $this->stmt->setQuery("$delete")->execute($delete->params());
     }
 
-    // public function count()
-    // {
-    //     $this->select->setColumns(['count(*)'])->prepare($this->table, $this->where);
-
-    //     return $this->stmt->setQuery("$this->select")->fetchColumn($this->select->params());
-    // }
 }

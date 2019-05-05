@@ -88,7 +88,6 @@ class QueryBuilderTest extends TestCase
             ->get();
 
         $this->assertEquals('select id, name from mytable group by id, name', $result['query']);
-
     }
 
     /** @test */
@@ -144,10 +143,17 @@ class QueryBuilderTest extends TestCase
     }
 
     /** @test */
+    public function it_limits()
+    {
+        $result = db()->testing()->from('mytb')->limit(2)->get();
+        $this->assertEquals('select top 2 * from mytb', $result['query']);
+    }
+
+    /** @test */
     public function it_fetchs_the_count()
     {
         $result = db()->testing()->from('mytb')->count();
 
-        $this->assertEquals('select count(*) from mytb limit 1', $result['query']);
+        $this->assertEquals('select top 1 count(*) from mytb', $result['query']);
     }
 }
