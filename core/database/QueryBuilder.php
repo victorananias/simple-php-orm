@@ -202,6 +202,12 @@ class QueryBuilder
         return $this->stmt->setQuery("$this->select")->fetchAll($this->select->params());
     }
 
+    public function first()
+    {
+        $result = $this->limit(1)->get();
+        return isset($result[0]) ? $result : $result;
+    }
+
     public function limit($limit)
     {
         $this->select->limit(new Limit($limit));

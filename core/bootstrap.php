@@ -4,8 +4,6 @@
 | Ligando a exibição de erros
 |
 */
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 use App\Core\App;
 use App\Core\Database\Connection;
@@ -20,6 +18,11 @@ App::bind('config', require __DIR__ . '/../config.php');
 //App::bind('db', new QueryBuilder(
 //    Connection::start(App::get('config')['database'])
 //));
+
+if (App::get('config')) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+}
 
 function db()
 {
