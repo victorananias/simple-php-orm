@@ -156,4 +156,12 @@ class QueryBuilderTest extends TestCase
 
         $this->assertEquals('select top 1 count(*) from mytb', $result['query']);
     }
+
+    /** @test */
+    public function it_can_select_the_first_row()
+    {
+        $result = db()->testing()->from('mytb')->first();
+
+        $this->assertEquals('select top 1 * from mytb', $result['query']);
+    }
 }

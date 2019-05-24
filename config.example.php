@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'debug' => true,
     'database' => [
         'connection' => 'sqlsrv',
         'host' => 'HOST',
