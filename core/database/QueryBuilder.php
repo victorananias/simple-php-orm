@@ -190,6 +190,10 @@ class QueryBuilder
      */
     public function get()
     {
+        if ($this->sql) {
+            return $this->stmt->setQuery($this->sql)->fetchAll($this->params);
+        }
+
         $this->select
             ->from($this->table)
             ->where($this->where)
@@ -205,7 +209,7 @@ class QueryBuilder
     public function first()
     {
         $result = $this->limit(1)->get();
-        return isset($result[0]) ? $result : $result;
+        return isset($result[0]) ? $result[0] : $result;
     }
 
     public function limit($limit)
@@ -277,9 +281,11 @@ class QueryBuilder
         return $this->stmt->setQuery("$update")->execute($update->params());
     }
 
-    public function raw($sql)
+    public function raw($sql, $params = [])
     {
         $this->sql = $sql;
+        $this->params = $params;
+
         return $this;
     }
 
@@ -289,5 +295,4 @@ class QueryBuilder
         $delete->from($this->table)->where($this->where);
         return $this->stmt->setQuery("$delete")->execute($delete->params());
     }
-
 }
