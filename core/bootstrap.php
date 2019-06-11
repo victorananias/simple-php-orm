@@ -1,9 +1,4 @@
 <?php
-/*
-|
-| Ligando a exibição de erros
-|
-*/
 
 use App\Core\App;
 use App\Core\Database\Connection;
