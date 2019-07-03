@@ -9,6 +9,7 @@ use App\Core\Database\Queriable\Update;
 use App\Core\Database\Queriable\Insert;
 use App\Core\Database\Queriable\OrderBy;
 use App\Core\Database\Queriable\Join;
+use App\Core\Database\Queriable\LeftJoin;
 use App\Core\Database\Queriable\GroupBy;
 use App\Core\Database\Queriable\Delete;
 use App\Core\Database\Queriable\Limit;
@@ -229,6 +230,32 @@ class QueryBuilder
     {
         $join = new Join($params[0]);
 
+        $join = $this->checkJoin($join, $params);
+
+        $this->joins[] = $join;
+
+        return $this;
+    }
+
+    /**
+     * leftJoin
+     *
+     * @param string ...$params
+     * @return QueryBuilder
+     */
+    public function leftJoin(...$params)
+    {
+        $join = new LeftJoin($params[0]);
+
+        $join = $this->checkJoinParams($join, $params);
+
+        $this->joins[] = $join;
+
+        return $this;
+    }
+
+    private function checkJoinParams($join, $params)
+    {
         if (count($params) == 2) {
             $params[1]($join);
         }
@@ -241,9 +268,7 @@ class QueryBuilder
             $join->on($params[1], $params[2], $params[3]);
         }
 
-        $this->joins[] = $join;
-
-        return $this;
+        return $join;
     }
 
     /**
