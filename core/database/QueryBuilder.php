@@ -136,10 +136,18 @@ class QueryBuilder
 
     public function count()
     {
-        $this->select->columns('count(*)')->from($this->table);
-        $this->select->limit(new Limit(1));
+        $this->select
+            ->from($this->table)
+            ->columns('count(*)')
+            ->where($this->where)
+            ->orderBy($this->orderBy)
+            ->limit(new Limit(1));
 
-        return $this->stmt->setQuery("$this->select")->fetchColumn();
+        foreach ($this->joins as $join) {
+            $this->select->join($join);
+        }
+
+        return $this->stmt->setQuery("$this->select")->fetchColumn(0, $this->select->params());
     }
 
     /**
