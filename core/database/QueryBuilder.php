@@ -238,7 +238,7 @@ class QueryBuilder
     {
         $join = new Join($params[0]);
 
-        $join = $this->checkJoin($join, $params);
+        $join = $this->checkJoinParams($join, $params);
 
         $this->joins[] = $join;
 
