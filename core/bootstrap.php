@@ -14,7 +14,7 @@ App::bind('config', require __DIR__ . '/../config.php');
 //    Connection::start(App::get('config')['database'])
 //));
 
-if (App::get('config')) {
+if (App::get('config')['debug']) {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
 }
