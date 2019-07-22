@@ -1,10 +1,14 @@
 {
-    "autoload": {
-        "classmap": [
-            "./"
-        ]
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^7.5"
-    }
+    "name": "good9ght/simple-orm",
+    "description": "Simple PHP ORM",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "victor",
+            "email": "victor@ananias.dev"
+        }
+    ],
+    "minimum-stability": "alpha",
+    "require": {}
 }
