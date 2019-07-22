@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Unit;
+namespace App\Tests\Unit;
 
-use Tests\TestCase;
-use App\Core\Database\Queriable\Join;
-use App\Core\Database\Queriable\LeftJoin;
-use App\Core\Database\Queriable\InnerJoin;
-use App\Core\Database\Queriable\RightJoin;
-use App\Core\Database\Queriable\FullJoin;
+use App\Queriables\Join;
+use App\Queriables\LeftJoin;
+use App\Queriables\InnerJoin;
+use App\Queriables\RightJoin;
+use App\Queriables\FullJoin;
+use App\Tests\TestCase;
 
 class JoinTest extends TestCase
 {

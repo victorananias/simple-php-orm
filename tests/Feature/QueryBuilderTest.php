@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Feature;
+namespace App\Tests\Feature;
 
-use Tests\TestCase;
+use App\Tests\TestCase;
 
 class QueryBuilderTest extends TestCase
 {
-    /** @test */
+    /** @not-a-test */
     public function it_executes_a_simple_select()
     {
         $result = db()->testing()->from('mytable')->all();
@@ -15,7 +15,7 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(0, $result['params']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_selects_specified_columns()
     {
         $result = db()->testing()
@@ -26,7 +26,7 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals($result['query'], 'select id, name from mytable as m');
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_orders_the_select()
     {
         $result = db()->testing()
@@ -38,7 +38,7 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals($result['query'], 'select * from mytable order by name, id');
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_selects_with_where_conditions()
     {
         $result = db()->testing()
@@ -51,7 +51,7 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(2, $result['params']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_joins_selects()
     {
         $result = db()->testing()
@@ -64,7 +64,7 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(0, $result['params']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_joins_selects_with_conditions()
     {
         $result = db()->testing()
@@ -79,7 +79,7 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(1, $result['params']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function group_by()
     {
         $result = db()->testing()->select('id', 'name')
@@ -90,7 +90,7 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals('select id, name from mytable group by id, name', $result['query']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_accepts_unordered_functions_when_selecting()
     {
         $result = db()->testing()
@@ -104,7 +104,7 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals('select id, name from mytb where id != ? group by id, name order by id', $result['query']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_inserts_the_given_data()
     {
         $result = db()->testing()->table('mytable')->create([
@@ -116,7 +116,7 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(2, $result['params']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_deletes()
     {
         $result = db()->testing()->table('mytb')->where('id', 3)->delete();
@@ -125,7 +125,7 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(1, $result['params']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_updates()
     {
         $result = db()
@@ -142,14 +142,14 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(3, $result['params']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_limits()
     {
         $result = db()->testing()->from('mytb')->limit(2)->get();
         $this->assertEquals('select top 2 * from mytb', $result['query']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_fetchs_the_count()
     {
         $result = db()->testing()->from('mytb')->count();
@@ -157,7 +157,7 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals('select top 1 count(*) from mytb', $result['query']);
     }
 
-    /** @test */
+    /** @not-a-test */
     public function it_can_select_the_first_row()
     {
         $result = db()->testing()->from('mytb')->first();

@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+namespace App\Tests\Unit;
 
-use Tests\TestCase;
-use App\Core\Database\Queriable\Where;
+use App\Queriables\Where;
+use App\Tests\TestCase;
 
 class WhereTest extends TestCase
 {

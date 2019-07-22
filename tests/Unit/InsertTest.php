@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+namespace App\Tests\Unit;
 
-use App\Core\Database\Queriable\Insert;
-
-use Tests\TestCase;
+use App\Queriables\Insert;
+use App\Tests\TestCase;
 
 class InsertTest extends TestCase
 {

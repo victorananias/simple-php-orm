@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Core\Database;
+namespace App;
 
 use \PDO;
-use App\Core\Database\Queriable\Select;
-use App\Core\Database\Queriable\Where;
-use App\Core\Database\Queriable\Update;
-use App\Core\Database\Queriable\Insert;
-use App\Core\Database\Queriable\OrderBy;
-use App\Core\Database\Queriable\Join;
-use App\Core\Database\Queriable\LeftJoin;
-use App\Core\Database\Queriable\GroupBy;
-use App\Core\Database\Queriable\Delete;
-use App\Core\Database\Queriable\Limit;
+use App\Queriables\Select;
+use App\Queriables\Where;
+use App\Queriables\Update;
+use App\Queriables\Insert;
+use App\Queriables\OrderBy;
+use App\Queriables\Join;
+use App\Queriables\LeftJoin;
+use App\Queriables\GroupBy;
+use App\Queriables\Delete;
+use App\Queriables\Limit;
 
 class QueryBuilder
 {

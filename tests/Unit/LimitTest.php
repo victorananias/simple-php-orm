@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+namespace App\Tests\Unit;
 
-use Tests\TestCase;
-use App\Core\Database\Queriable\Limit;
+use App\Queriables\Limit;
+use App\Tests\TestCase;
 
 class LimitTest extends TestCase
 {

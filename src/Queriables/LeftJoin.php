@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Database\Queriable;
+namespace App\Queriables;
 
 class LeftJoin extends Join
 {

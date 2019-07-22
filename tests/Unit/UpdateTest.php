@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Unit;
+namespace App\Tests\Unit;
 
-use Tests\TestCase;
-use App\Core\Database\Queriable\Where;
-use App\Core\Database\Queriable\Update;
+use App\Queriables\Where;
+use App\Queriables\Update;
+use App\Tests\TestCase;
 
 class UpdateTest extends TestCase
 {

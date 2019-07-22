@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+namespace App\Tests\Unit;
 
-use App\Core\Database\Queriable\GroupBy;
-
-use Tests\TestCase;
+use App\Queriables\GroupBy;
+use App\Tests\TestCase;
 
 class GroupByTest extends TestCase
 {

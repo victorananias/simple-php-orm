@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Unit;
+namespace App\Tests\Unit;
 
-use Tests\TestCase;
-use App\Core\Database\Queriable\Select;
-use App\Core\Database\Queriable\Where;
-use App\Core\Database\Queriable\OrderBy;
-use App\Core\Database\Queriable\Join;
-use App\Core\Database\Queriable\GroupBy;
-use App\Core\Database\Queriable\LeftJoin;
+use App\Queriables\Select;
+use App\Queriables\Where;
+use App\Queriables\OrderBy;
+use App\Queriables\Join;
+use App\Queriables\GroupBy;
+use App\Queriables\LeftJoin;
+use App\Tests\TestCase;
 
 class SelectTest extends TestCase
 {

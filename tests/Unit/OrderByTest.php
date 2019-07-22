@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+namespace App\Tests\Unit;
 
-use Tests\TestCase;
-use App\Core\Database\Queriable\OrderBy;
+use App\Queriables\OrderBy;
+use App\Tests\TestCase;
 
 class OrderByTest extends TestCase
 {
