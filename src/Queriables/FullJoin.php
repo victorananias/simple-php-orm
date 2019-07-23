@@ -8,5 +8,4 @@ class FullJoin extends Join
     {
         return 'full '. parent::__toString();
     }
-
 }

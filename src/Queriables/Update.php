@@ -2,7 +2,7 @@
 
 namespace SimpleORM\Queriables;
 
-class Update
+class Update implements Queriable
 {
     protected $columns = [];
     protected $table;

@@ -8,5 +8,4 @@ class InnerJoin extends Join
     {
         return 'inner '. parent::__toString();
     }
-
 }

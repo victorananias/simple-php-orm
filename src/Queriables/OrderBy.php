@@ -2,7 +2,7 @@
 
 namespace SimpleORM\Queriables;
 
-class OrderBy
+class OrderBy implements Queriable
 {
     protected $conditions = [];
 

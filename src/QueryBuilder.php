@@ -177,17 +177,17 @@ class QueryBuilder
 
     public function pluck($column)
     {
-        // $this->sql = $this->select->prepare($this->table, $this->where);
+        $this->select
+            ->columns($column)
+            ->from($this->table)
+            ->where($this->where)
+            ->orderBy($this->orderBy);
 
-        // $result = $this->stmt->setQuery($this->sql)->fetchAll($this->select->params());
+        foreach ($this->joins as $join) {
+            $this->select->join($join);
+        }
 
-        // if (count($result) == 0) {
-        //     return [];
-        // }
-
-        // return array_map(function ($i) use ($column) {
-        //     return $i->$column;
-        // }, $result);
+        return $this->stmt->setQuery("$this->select")->fetchColumn($this->select->params());
     }
 
     /**

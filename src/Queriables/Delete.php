@@ -2,7 +2,7 @@
 
 namespace SimpleORM\Queriables;
 
-class Delete
+class Delete implements Queriable
 {
     protected $table;
     protected $where;

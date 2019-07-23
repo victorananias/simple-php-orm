@@ -2,7 +2,7 @@
 
 namespace SimpleORM\Queriables;
 
-class Where
+class Where implements Queriable
 {
     protected $conditions = [];
     protected $params = [];
