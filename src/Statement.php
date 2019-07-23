@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace SimpleORM;
 
 use \PDO;
 
@@ -21,7 +21,7 @@ class Statement
      * @param boolean $value
      * @return void
      */
-    public function setTesting($value = true)
+    public function setToSql($value = true)
     {
         $this->testing = $value;
     }

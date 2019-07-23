@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Queriables;
+namespace SimpleORM\Queriables;
 
 class Where
 {

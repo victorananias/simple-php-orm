@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Unit;
+namespace SimpleORM\Tests\Unit;
 
-use App\Queriables\OrderBy;
-use App\Tests\TestCase;
+use SimpleORM\Queriables\OrderBy;
+use SimpleORM\Tests\TestCase;
 
 class OrderByTest extends TestCase
 {

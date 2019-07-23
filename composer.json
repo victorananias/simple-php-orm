@@ -13,12 +13,12 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "SimpleORM\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "SimpleORM\\Tests\\": "tests/"
         }
     },
     "require-dev": {

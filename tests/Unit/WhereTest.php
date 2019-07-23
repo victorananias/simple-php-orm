@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Unit;
+namespace SimpleORM\Tests\Unit;
 
-use App\Queriables\Where;
-use App\Tests\TestCase;
+use SimpleORM\Queriables\Where;
+use SimpleORM\Tests\TestCase;
 
 class WhereTest extends TestCase
 {

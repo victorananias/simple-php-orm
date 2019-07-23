@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace SimpleORM;
 
 use \PDO;
 use \PDOException;

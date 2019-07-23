@@ -1,18 +1,18 @@
 <?php
 
-namespace App;
+namespace SimpleORM;
 
 use \PDO;
-use App\Queriables\Select;
-use App\Queriables\Where;
-use App\Queriables\Update;
-use App\Queriables\Insert;
-use App\Queriables\OrderBy;
-use App\Queriables\Join;
-use App\Queriables\LeftJoin;
-use App\Queriables\GroupBy;
-use App\Queriables\Delete;
-use App\Queriables\Limit;
+use SimpleORM\Queriables\Select;
+use SimpleORM\Queriables\Where;
+use SimpleORM\Queriables\Update;
+use SimpleORM\Queriables\Insert;
+use SimpleORM\Queriables\OrderBy;
+use SimpleORM\Queriables\Join;
+use SimpleORM\Queriables\LeftJoin;
+use SimpleORM\Queriables\GroupBy;
+use SimpleORM\Queriables\Delete;
+use SimpleORM\Queriables\Limit;
 
 class QueryBuilder
 {
@@ -42,9 +42,9 @@ class QueryBuilder
         $this->orderBy = new OrderBy();
     }
 
-    public function testing()
+    public function toSql()
     {
-        $this->stmt->setTesting();
+        $this->stmt->setToSql();
         return $this;
     }
 

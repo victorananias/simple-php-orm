@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Unit;
+namespace SimpleORM\Tests\Unit;
 
-use App\Queriables\GroupBy;
-use App\Tests\TestCase;
+use SimpleORM\Queriables\GroupBy;
+use SimpleORM\Tests\TestCase;
 
 class GroupByTest extends TestCase
 {

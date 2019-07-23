@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace SimpleORM\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
