@@ -66,12 +66,8 @@ class QueryBuilder
      * @param string $name
      * @return $this
      */
-    public function table($table = null, $alias = null)
+    public function table($table = 'table', $alias = null)
     {
-        if (!$table) {
-            die('Table name not specified.');
-        }
-
         $this->table = $alias ? $table . ' as ' . $alias : $table;
 
         return $this;

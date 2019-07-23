@@ -8,7 +8,7 @@ if (!file_exists(__DIR__ . '/config.php')) {
     die('"config.php\" was not found. Please, create it and try again.');
 }
 
-App::bind('config', require __DIR__ . '/config.php');
+$config = require __DIR__.'/config.php';
 
 if (App::get('config')['debug']) {
     error_reporting(E_ALL);
@@ -18,6 +18,6 @@ if (App::get('config')['debug']) {
 function db()
 {
     return new QueryBuilder(
-        Connection::start(App::get('config')['database'])
+        Connection::start($config['database'])
     );
 }
