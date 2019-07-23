@@ -8,7 +8,7 @@ class Statement
 {
     protected $pdo;
     protected $query;
-    protected $testing = false;
+    protected $toSql = false;
 
     public function __construct(PDO $pdo)
     {
@@ -23,7 +23,7 @@ class Statement
      */
     public function setToSql($value = true)
     {
-        $this->testing = $value;
+        $this->toSql = $value;
     }
 
     public function setQuery(string $query)
@@ -40,7 +40,7 @@ class Statement
      */
     public function fetchAll($params = [])
     {
-        if ($this->testing) {
+        if ($this->toSql) {
             return [
                 'query' => $this->query,
                 'params' => $params
@@ -65,7 +65,7 @@ class Statement
      */
     public function fetch($params = [])
     {
-        if ($this->testing) {
+        if ($this->toSql) {
             return [
                 'query' => $this->query,
                 'params' => $params
@@ -90,7 +90,7 @@ class Statement
      */
     public function fetchColumn($columnNumber = 0, $params = [])
     {
-        if ($this->testing) {
+        if ($this->toSql) {
             return [
                 'query' => $this->query,
                 'params' => $params
@@ -109,7 +109,7 @@ class Statement
 
     public function execute($params = [])
     {
-        if ($this->testing) {
+        if ($this->toSql) {
             return [
                 'query' => $this->query,
                 'params' => $params
