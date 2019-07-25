@@ -9,7 +9,8 @@
             "email": "victor@ananias.dev"
         }
     ],
-    "minimum-stability": "alpha",
+    "minimum-stability": "stable",
+    "version": "1.0",
     "require": {},
     "autoload": {
         "psr-4": {
