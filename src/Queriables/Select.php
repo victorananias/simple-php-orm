@@ -124,26 +124,22 @@ class Select implements Queriable
     {
         $query = "select {$this->getColumnsString()} from {$this->table}";
 
-        if ($this->joins != []) {
-
-            foreach ($this->joins as $j) {
-                $this->addParams($j);
-            }
-
-            $query .= ' ' . implode(' ', $this->joins);
+        foreach ($this->joins as $join) {
+            $this->addParams($join);
+            $query .= ' ' . $join->__toString();
         }
 
-        if ($this->where->__toString()) {
+        if ($this->where && $this->where->__toString()) {
             $query .= ' ' . $this->where;
             $this->addParams($this->where);
         }
 
-        if ($this->groupBy->__toString()) {
+        if ($this->groupBy && $this->groupBy->__toString()) {
             $query .= ' ' . $this->groupBy;
             $this->addParams($this->groupBy);
         }
 
-        if ("$this->orderBy") {
+        if ($this->orderBy && $this->orderBy->__toString()) {
             $query .= ' ' . $this->orderBy;
         }
 
