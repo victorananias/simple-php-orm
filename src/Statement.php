@@ -17,14 +17,19 @@ class Statement
 
     /**
      * set the current mode as test
+     *
      * @param bool $value
+     * @return $this
      */
     public function setToSql($value = true)
     {
         $this->toSql = $value;
+        return $this;
     }
 
     /**
+     * set query attribute
+     *
      * @param string $query
      * @return $this
      */
@@ -35,7 +40,8 @@ class Statement
     }
 
     /**
-     * Fetch all data for the sql query
+     * fetch all data for the sql query
+     *
      * @param array $params
      * @return array
      */
@@ -59,7 +65,8 @@ class Statement
     }
 
     /**
-     * Fetch all data for the sql query
+     * fetch all data for the sql query
+     *
      * @param array $params
      * @return array|mixed
      */
@@ -83,7 +90,8 @@ class Statement
     }
 
     /**
-     * Fetch specified Column
+     * fetch specified Column
+     *
      * @param int $columnNumber
      * @param array $params
      * @return array|mixed
@@ -108,6 +116,7 @@ class Statement
     }
 
     /**
+     * execute the query
      *
      * @param array $params
      * @return array|string

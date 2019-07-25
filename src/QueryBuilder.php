@@ -24,7 +24,7 @@ class QueryBuilder
 
     protected $stmt;
     protected $where;
-    protected $select;
+    public $select;
     protected $orderBy;
     protected $joins = [];
 
@@ -66,7 +66,7 @@ class QueryBuilder
      * @param string $name
      * @return $this
      */
-    public function table($table = 'table', $alias = null)
+    public function table($table, $alias = null)
     {
         $this->table = $alias ? $table . ' as ' . $alias : $table;
 
@@ -77,7 +77,7 @@ class QueryBuilder
      * add where conditions
      *
      * @param mixed ...$data
-     * @return \App\Core\Database\QueryBuilder
+     * @return QueryBuilder
      */
     public function where(...$data)
     {
@@ -97,7 +97,7 @@ class QueryBuilder
      *
      * @param string $column
      * @param string $value
-     * @return \App\Core\Database\QueryBuilder
+     * @return QueryBuilder
      */
     public function whereLike($column, $value)
     {
@@ -109,7 +109,7 @@ class QueryBuilder
      * add where null condition
      *
      * @param string $column
-     * @return \App\Core\Database\QueryBuilder
+     * @return QueryBuilder
      */
     public function whereNull($column)
     {
@@ -121,8 +121,7 @@ class QueryBuilder
      * add where not null condition
      *
      * @param string $column
-     * @param string $value
-     * @return \App\Core\Database\QueryBuilder
+     * @return QueryBuilder
      */
     public function whereNotNull($column)
     {
@@ -154,7 +153,7 @@ class QueryBuilder
     public function all()
     {
         $this->select->from($this->table);
-        return $this->stmt->setQuery("$this->select")->fetchAll();
+        return $this->stmt->setQuery($this->select->__toString())->fetchAll();
     }
 
     public function groupBy(...$columns)
