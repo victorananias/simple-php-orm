@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+namespace SimpleORM\Tests\Unit;
 
-use App\Core\Database\Queriable\Insert;
-
-use Tests\TestCase;
+use SimpleORM\Queriables\Insert;
+use SimpleORM\Tests\TestCase;
 
 class InsertTest extends TestCase
 {

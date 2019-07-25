@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Database\Queriable;
+namespace SimpleORM\Queriables;
 
-class Insert
+class Insert implements Queriable
 {
     protected $table;
     protected $query = '';

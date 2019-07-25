@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+namespace SimpleORM\Tests\Unit;
 
-use Tests\TestCase;
-use App\Core\Database\Queriable\Limit;
+use SimpleORM\Queriables\Limit;
+use SimpleORM\Tests\TestCase;
 
 class LimitTest extends TestCase
 {

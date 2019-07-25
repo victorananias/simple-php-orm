@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Unit;
+namespace SimpleORM\Tests\Unit;
 
-use Tests\TestCase;
-use App\Core\Database\Queriable\Delete;
-use App\Core\Database\Queriable\Where;
+use SimpleORM\Queriables\Delete;
+use SimpleORM\Queriables\Where;
+use SimpleORM\Tests\TestCase;
 
 class DeleteTest extends TestCase
 {

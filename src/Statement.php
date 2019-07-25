@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Database;
+namespace SimpleORM;
 
 use \PDO;
 
@@ -8,7 +8,7 @@ class Statement
 {
     protected $pdo;
     protected $query;
-    protected $testing = false;
+    protected $toSql = false;
 
     public function __construct(PDO $pdo)
     {
@@ -18,14 +18,21 @@ class Statement
     /**
      * set the current mode as test
      *
-     * @param boolean $value
-     * @return void
+     * @param bool $value
+     * @return $this
      */
-    public function setTesting($value = true)
+    public function setToSql($value = true)
     {
-        $this->testing = $value;
+        $this->toSql = $value;
+        return $this;
     }
 
+    /**
+     * set query attribute
+     *
+     * @param string $query
+     * @return $this
+     */
     public function setQuery(string $query)
     {
         $this->query = $query;
@@ -33,14 +40,14 @@ class Statement
     }
 
     /**
+     * fetch all data for the sql query
      *
-     * Fetch all data for the sql query
-     *
+     * @param array $params
      * @return array
      */
     public function fetchAll($params = [])
     {
-        if ($this->testing) {
+        if ($this->toSql) {
             return [
                 'query' => $this->query,
                 'params' => $params
@@ -58,14 +65,14 @@ class Statement
     }
 
     /**
+     * fetch all data for the sql query
      *
-     * Fetch all data for the sql query
-     *
-     * @return array
+     * @param array $params
+     * @return array|mixed
      */
     public function fetch($params = [])
     {
-        if ($this->testing) {
+        if ($this->toSql) {
             return [
                 'query' => $this->query,
                 'params' => $params
@@ -83,14 +90,15 @@ class Statement
     }
 
     /**
+     * fetch specified Column
      *
-     * Fetch specified Column
-     *
-     * @return array
+     * @param int $columnNumber
+     * @param array $params
+     * @return array|mixed
      */
     public function fetchColumn($columnNumber = 0, $params = [])
     {
-        if ($this->testing) {
+        if ($this->toSql) {
             return [
                 'query' => $this->query,
                 'params' => $params
@@ -107,9 +115,15 @@ class Statement
         }
     }
 
+    /**
+     * execute the query
+     *
+     * @param array $params
+     * @return array|string
+     */
     public function execute($params = [])
     {
-        if ($this->testing) {
+        if ($this->toSql) {
             return [
                 'query' => $this->query,
                 'params' => $params

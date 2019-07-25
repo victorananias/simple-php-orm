@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Database\Queriable;
+namespace SimpleORM\Queriables;
 
 class FullJoin extends Join
 {
@@ -8,5 +8,4 @@ class FullJoin extends Join
     {
         return 'full '. parent::__toString();
     }
-
 }

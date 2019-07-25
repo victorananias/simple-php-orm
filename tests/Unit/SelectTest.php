@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Unit;
+namespace SimpleORM\Tests\Unit;
 
-use Tests\TestCase;
-use App\Core\Database\Queriable\Select;
-use App\Core\Database\Queriable\Where;
-use App\Core\Database\Queriable\OrderBy;
-use App\Core\Database\Queriable\Join;
-use App\Core\Database\Queriable\GroupBy;
-use App\Core\Database\Queriable\LeftJoin;
+use SimpleORM\Queriables\Select;
+use SimpleORM\Queriables\Where;
+use SimpleORM\Queriables\OrderBy;
+use SimpleORM\Queriables\Join;
+use SimpleORM\Queriables\GroupBy;
+use SimpleORM\Queriables\LeftJoin;
+use SimpleORM\Tests\TestCase;
 
 class SelectTest extends TestCase
 {

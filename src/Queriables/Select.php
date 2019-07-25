@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Database\Queriable;
+namespace SimpleORM\Queriables;
 
-class Select
+class Select implements Queriable
 {
     public $columns = ['*'];
     public $params = [];
@@ -14,10 +14,13 @@ class Select
     protected $limit;
     protected $joins = [];
 
+    /**
+     * @param mixed ...$columns
+     * @return $this
+     */
     public function columns(...$columns)
     {
         $this->columns = $columns;
-
         return $this;
     }
 
@@ -45,11 +48,21 @@ class Select
         return $this;
     }
 
+    /**
+     * receibes group by
+     *
+     * @param GroupBy $groupBy
+     */
     public function groupBy(GroupBy $groupBy)
     {
         $this->groupBy = $groupBy;
     }
 
+    /**
+     * receives joins
+     *
+     * @param Join $join
+     */
     public function join(Join $join)
     {
         $this->joins[] = $join;
@@ -70,7 +83,7 @@ class Select
     /**
      * returns the select params
      *
-     * @return void
+     * @return array
      */
     public function params()
     {
@@ -80,8 +93,7 @@ class Select
     /**
      * add model params to the params array
      *
-     * @param [type] $class
-     * @return void
+     * @param $class
      */
     protected function addParams($class)
     {
@@ -98,6 +110,11 @@ class Select
         return implode(', ', $this->columns);
     }
 
+    /**
+     * receives limit
+     *
+     * @param $limit
+     */
     public function limit($limit)
     {
         $this->limit = $limit;
@@ -107,26 +124,22 @@ class Select
     {
         $query = "select {$this->getColumnsString()} from {$this->table}";
 
-        if ($this->joins != []) {
-
-            foreach ($this->joins as $j) {
-                $this->addParams($j);
-            }
-
-            $query .= ' ' . implode(' ', $this->joins);
+        foreach ($this->joins as $join) {
+            $this->addParams($join);
+            $query .= ' ' . $join->__toString();
         }
 
-        if ("$this->where") {
+        if ($this->where && $this->where->__toString()) {
             $query .= ' ' . $this->where;
             $this->addParams($this->where);
         }
 
-        if ("$this->groupBy") {
+        if ($this->groupBy && $this->groupBy->__toString()) {
             $query .= ' ' . $this->groupBy;
             $this->addParams($this->groupBy);
         }
 
-        if ("$this->orderBy") {
+        if ($this->orderBy && $this->orderBy->__toString()) {
             $query .= ' ' . $this->orderBy;
         }
 

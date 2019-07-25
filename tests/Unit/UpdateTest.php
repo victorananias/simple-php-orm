@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Unit;
+namespace SimpleORM\Tests\Unit;
 
-use Tests\TestCase;
-use App\Core\Database\Queriable\Where;
-use App\Core\Database\Queriable\Update;
+use SimpleORM\Queriables\Where;
+use SimpleORM\Queriables\Update;
+use SimpleORM\Tests\TestCase;
 
 class UpdateTest extends TestCase
 {

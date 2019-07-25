@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Database\Queriable;
+namespace SimpleORM\Queriables;
 
-class OrderBy
+class OrderBy implements Queriable
 {
     protected $conditions = [];
 

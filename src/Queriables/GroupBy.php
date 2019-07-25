@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Database\Queriable;
+namespace SimpleORM\Queriables;
 
-class GroupBy
+class GroupBy implements Queriable
 {
     protected $columns = [];
     protected $where;
@@ -18,6 +18,11 @@ class GroupBy
         $this->where->add(...$columns);
     }
 
+    public function params()
+    {
+        return $this->where->params();
+    }
+
     public function __toString()
     {
         if ($this->columns == []) {
@@ -31,10 +36,5 @@ class GroupBy
         }
 
         return $query;
-    }
-
-    public function params()
-    {
-        return $this->where->params();
     }
 }

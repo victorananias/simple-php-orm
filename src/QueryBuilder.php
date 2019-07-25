@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Core\Database;
+namespace SimpleORM;
 
 use \PDO;
-use App\Core\Database\Queriable\Select;
-use App\Core\Database\Queriable\Where;
-use App\Core\Database\Queriable\Update;
-use App\Core\Database\Queriable\Insert;
-use App\Core\Database\Queriable\OrderBy;
-use App\Core\Database\Queriable\Join;
-use App\Core\Database\Queriable\LeftJoin;
-use App\Core\Database\Queriable\GroupBy;
-use App\Core\Database\Queriable\Delete;
-use App\Core\Database\Queriable\Limit;
+use SimpleORM\Queriables\Select;
+use SimpleORM\Queriables\Where;
+use SimpleORM\Queriables\Update;
+use SimpleORM\Queriables\Insert;
+use SimpleORM\Queriables\OrderBy;
+use SimpleORM\Queriables\Join;
+use SimpleORM\Queriables\LeftJoin;
+use SimpleORM\Queriables\GroupBy;
+use SimpleORM\Queriables\Delete;
+use SimpleORM\Queriables\Limit;
 
 class QueryBuilder
 {
@@ -24,7 +24,7 @@ class QueryBuilder
 
     protected $stmt;
     protected $where;
-    protected $select;
+    public $select;
     protected $orderBy;
     protected $joins = [];
 
@@ -42,9 +42,9 @@ class QueryBuilder
         $this->orderBy = new OrderBy();
     }
 
-    public function testing()
+    public function toSql()
     {
-        $this->stmt->setTesting();
+        $this->stmt->setToSql();
         return $this;
     }
 
@@ -66,12 +66,8 @@ class QueryBuilder
      * @param string $name
      * @return $this
      */
-    public function table($table = null, $alias = null)
+    public function table($table, $alias = null)
     {
-        if (!$table) {
-            die('Table name not specified.');
-        }
-
         $this->table = $alias ? $table . ' as ' . $alias : $table;
 
         return $this;
@@ -81,7 +77,7 @@ class QueryBuilder
      * add where conditions
      *
      * @param mixed ...$data
-     * @return \App\Core\Database\QueryBuilder
+     * @return QueryBuilder
      */
     public function where(...$data)
     {
@@ -101,7 +97,7 @@ class QueryBuilder
      *
      * @param string $column
      * @param string $value
-     * @return \App\Core\Database\QueryBuilder
+     * @return QueryBuilder
      */
     public function whereLike($column, $value)
     {
@@ -113,7 +109,7 @@ class QueryBuilder
      * add where null condition
      *
      * @param string $column
-     * @return \App\Core\Database\QueryBuilder
+     * @return QueryBuilder
      */
     public function whereNull($column)
     {
@@ -125,8 +121,7 @@ class QueryBuilder
      * add where not null condition
      *
      * @param string $column
-     * @param string $value
-     * @return \App\Core\Database\QueryBuilder
+     * @return QueryBuilder
      */
     public function whereNotNull($column)
     {
@@ -158,7 +153,7 @@ class QueryBuilder
     public function all()
     {
         $this->select->from($this->table);
-        return $this->stmt->setQuery("$this->select")->fetchAll();
+        return $this->stmt->setQuery($this->select->__toString())->fetchAll();
     }
 
     public function groupBy(...$columns)
@@ -181,17 +176,17 @@ class QueryBuilder
 
     public function pluck($column)
     {
-        // $this->sql = $this->select->prepare($this->table, $this->where);
+        $this->select
+            ->columns($column)
+            ->from($this->table)
+            ->where($this->where)
+            ->orderBy($this->orderBy);
 
-        // $result = $this->stmt->setQuery($this->sql)->fetchAll($this->select->params());
+        foreach ($this->joins as $join) {
+            $this->select->join($join);
+        }
 
-        // if (count($result) == 0) {
-        //     return [];
-        // }
-
-        // return array_map(function ($i) use ($column) {
-        //     return $i->$column;
-        // }, $result);
+        return $this->stmt->setQuery("$this->select")->fetchColumn($this->select->params());
     }
 
     /**

@@ -1,8 +1,6 @@
 <?php
 
-namespace Tests;
-
-require __DIR__ . '/../index.php';
+namespace SimpleORM\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 

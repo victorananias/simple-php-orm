@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Database\Queriable;
+namespace SimpleORM\Queriables;
 
-class Join
+class Join implements Queriable
 {
     protected $table;
     protected $conditions = [];

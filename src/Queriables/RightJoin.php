@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Database\Queriable;
+namespace SimpleORM\Queriables;
 
 class RightJoin extends Join
 {

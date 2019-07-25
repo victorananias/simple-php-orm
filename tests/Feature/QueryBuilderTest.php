@@ -1,15 +1,27 @@
 <?php
 
-namespace Tests\Feature;
+namespace SimpleORM\Tests\Feature;
 
-use Tests\TestCase;
+use SimpleORM\QueryBuilder;
+use SimpleORM\Tests\TestCase;
+use \PDO;
 
 class QueryBuilderTest extends TestCase
 {
+    private $dsn = 'sqlite:testing.sqlite3';
+
+    public function tearDown(): void
+    {
+        unlink(explode(':', $this->dsn)[1]);
+        parent::tearDown();
+    }
+
     /** @test */
     public function it_executes_a_simple_select()
     {
-        $result = db()->testing()->from('mytable')->all();
+//        var_dump($this->db()->select);
+//        die();
+        $result = $this->db()->toSql()->from('mytable')->all();
 
         $this->assertEquals($result['query'], 'select * from mytable');
         $this->assertCount(0, $result['params']);
@@ -18,7 +30,7 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_selects_specified_columns()
     {
-        $result = db()->testing()
+        $result = $this->db()->toSql()
             ->select('id', 'name')
             ->from('mytable', 'm')
             ->get();
@@ -29,7 +41,7 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_orders_the_select()
     {
-        $result = db()->testing()
+        $result = $this->db()->toSql()
             ->from('mytable')
             ->orderBy('name')
             ->orderBy('id')
@@ -41,7 +53,7 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_selects_with_where_conditions()
     {
-        $result = db()->testing()
+        $result = $this->db()->toSql()
             ->from('mytable')
             ->where('id', 2)
             ->where('name', 'like', 'eita')
@@ -54,7 +66,7 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_joins_selects()
     {
-        $result = db()->testing()
+        $result = $this->db()->toSql()
             ->from('mytable', 'm')
             ->join('table as t', 't.id', 'm.table_id')
             ->get();
@@ -67,7 +79,7 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_joins_selects_with_conditions()
     {
-        $result = db()->testing()
+        $result = $this->db()->toSql()
             ->from('mytable', 'm')
             ->join('table as t', function ($join) {
                 $join->on('t.id', 'm.table_id');
@@ -82,7 +94,7 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function group_by()
     {
-        $result = db()->testing()->select('id', 'name')
+        $result = $this->db()->toSql()->select('id', 'name')
             ->from('mytable')
             ->groupBy('id', 'name')
             ->get();
@@ -93,7 +105,7 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_accepts_unordered_functions_when_selecting()
     {
-        $result = db()->testing()
+        $result = $this->db()->toSql()
             ->where('id', '!=', 2)
             ->groupBy('id', 'name')
             ->from('mytb')
@@ -107,7 +119,7 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_inserts_the_given_data()
     {
-        $result = db()->testing()->table('mytable')->create([
+        $result = $this->db()->toSql()->table('mytable')->create([
             'name' => 'this is the name',
             'type' => 'test'
         ]);
@@ -119,7 +131,7 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_deletes()
     {
-        $result = db()->testing()->table('mytb')->where('id', 3)->delete();
+        $result = $this->db()->toSql()->table('mytb')->where('id', 3)->delete();
 
         $this->assertEquals('delete from mytb where id = ?', $result['query']);
         $this->assertCount(1, $result['params']);
@@ -128,15 +140,15 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_updates()
     {
-        $result = db()
-                    ->testing()
-                    ->table('mytb')
-                    ->where([
-                        'id' => 2
-                    ])->update([
-                        'name' => 2,
-                        'type' => 'new type'
-                    ]);
+        $result = $this->db()
+            ->toSql()
+            ->table('mytb')
+            ->where([
+                'id' => 2
+            ])->update([
+                'name' => 2,
+                'type' => 'new type'
+            ]);
 
         $this->assertEquals('update mytb set name = ?, type = ? where id = ?', $result['query']);
         $this->assertCount(3, $result['params']);
@@ -145,14 +157,14 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_limits()
     {
-        $result = db()->testing()->from('mytb')->limit(2)->get();
+        $result = $this->db()->toSql()->from('mytb')->limit(2)->get();
         $this->assertEquals('select top 2 * from mytb', $result['query']);
     }
 
     /** @test */
     public function it_fetchs_the_count()
     {
-        $result = db()->testing()->from('mytb')->count();
+        $result = $this->db()->toSql()->from('mytb')->count();
 
         $this->assertEquals('select top 1 count(*) from mytb', $result['query']);
     }
@@ -160,8 +172,18 @@ class QueryBuilderTest extends TestCase
     /** @test */
     public function it_can_select_the_first_row()
     {
-        $result = db()->testing()->from('mytb')->first();
+        $result = $this->db()->toSql()->from('mytb')->first();
 
         $this->assertEquals('select top 1 * from mytb', $result['query']);
+    }
+
+    /** @test */
+    public function it_can_select_only_one_column()
+    {
+    }
+
+    private function db()
+    {
+        return new QueryBuilder(new PDO($this->dsn));
     }
 }

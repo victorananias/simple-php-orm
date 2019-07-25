@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Database\Queriable;
+namespace SimpleORM\Queriables;
 
 class InnerJoin extends Join
 {
@@ -8,5 +8,4 @@ class InnerJoin extends Join
     {
         return 'inner '. parent::__toString();
     }
-
 }
