@@ -9,7 +9,7 @@
             "email": "victor@ananias.dev"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "version": "1.0",
     "require": {},
     "autoload": {
