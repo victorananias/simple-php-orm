@@ -12,15 +12,16 @@ class QueryBuilderTest extends TestCase
 
     public function tearDown(): void
     {
-        unlink(explode(':', $this->dsn)[1]);
+        if (file_exists(explode(':', $this->dsn)[1])) {
+            unlink(explode(':', $this->dsn)[1]);
+        }
+
         parent::tearDown();
     }
 
     /** @test */
     public function it_executes_a_simple_select()
     {
-//        var_dump($this->db()->select);
-//        die();
         $result = $this->db()->toSql()->from('mytable')->all();
 
         $this->assertEquals($result['query'], 'select * from mytable');
@@ -177,7 +178,6 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals('select top 1 * from mytb', $result['query']);
     }
 
-    /** @test */
     public function it_can_select_only_one_column()
     {
     }
