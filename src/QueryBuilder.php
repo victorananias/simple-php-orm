@@ -334,6 +334,17 @@ class QueryBuilder
     }
 
     /**
+     * @param array $data
+     * @return array|string
+     */
+    public function insert($data = [])
+    {
+        $insert = new Insert($this->table);
+        $insert->addMultiple($data);
+        return $this->stmt->setQuery($insert)->execute($insert->params());
+    }
+
+    /**
      * @return array|string
      */
     public function delete()

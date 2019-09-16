@@ -178,8 +178,22 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals('select top 1 * from mytb', $result['query']);
     }
 
-    public function it_can_select_only_one_column()
+    /** @test */
+    public function it_can_insert_multiple_data()
     {
+        $result = $this->db()->toSql()->table('mytb')->insert([
+            [
+                'name' => 'john',
+                'age' => 22
+            ],
+            [
+                'name' => 'jane',
+                'age' => 21
+            ]
+        ]);
+
+        $this->assertEquals('insert into mytb(name, age) values(?, ?), (?, ?)', $result['query']);
+        $this->assertCount(4, $result['params']);
     }
 
     private function db()

@@ -25,11 +25,11 @@ class InsertTest extends TestCase
         $insert = new Insert('mytable');
 
         $insert->addMultiple([
-            ['name' => 'name 1'],
-            ['name' => 'name 2']
+            ['name' => 'name 1', 'age' => 23],
+            ['name' => 'name 2', 'age' => 21]
         ]);
 
-        $this->assertEquals($insert->__toString(), 'insert into mytable(name) values(?); insert into mytable(name) values(?)');
-        $this->assertCount(2, $insert->params());
+        $this->assertEquals($insert->__toString(), 'insert into mytable(name, age) values(?, ?), (?, ?)');
+        $this->assertCount(4, $insert->params());
     }
 }

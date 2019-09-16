@@ -17,22 +17,16 @@ class Insert implements Queriable
         }
     }
 
-    public function __toString()
-    {
-        return $this->query;
-    }
-
     public function params()
     {
         return $this->params;
     }
 
+    /**
+     * @param $data
+     */
     protected function add($data)
     {
-        if ($this->query != '') {
-            $this->query .= '; ';
-        }
-
         $this->query .= sprintf(
             'insert into %s(%s) values(%s)',
             $this->table,
@@ -43,10 +37,30 @@ class Insert implements Queriable
         $this->params = array_merge($this->params, array_values($data));
     }
 
-    public function addMultiple($data)
+    /**
+     * @param array $data
+     */
+    public function addMultiple($data = [])
     {
+        $countInserts = count($data);
+        $countFields = count($data[0]);
+        $fields = array_keys($data[0]);
+
+        $query = sprintf('insert into %s(%s) values', $this->table, implode(', ', $fields));
+        $parenthesis = '('.substr(str_repeat('?, ', $countFields), 0, -2).'), ';
+        $inserts = substr(str_repeat($parenthesis, $countInserts), 0, -2);
+
+        $query .= $inserts;
+
         foreach ($data as $insert) {
-            $this->add($insert);
+            $this->params = array_merge($this->params, array_values($insert));
         }
+
+        $this->query = $query;
+    }
+
+    public function __toString()
+    {
+        return $this->query;
     }
 }
