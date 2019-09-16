@@ -2,6 +2,7 @@
 
 namespace SimpleORM;
 
+use MongoDB\Driver\Query;
 use \PDO;
 use SimpleORM\Queriables\Select;
 use SimpleORM\Queriables\Where;
@@ -42,6 +43,10 @@ class QueryBuilder
         $this->orderBy = new OrderBy();
     }
 
+    /**
+     *
+     * @return QueryBuilder
+     */
     public function toSql()
     {
         $this->stmt->setToSql();
@@ -49,10 +54,12 @@ class QueryBuilder
     }
 
     /**
+     *
      * set table name
      *
-     * @param string $name
-     * @return void
+     * @param string $table
+     * @param string $alias = null
+     * @return QueryBuilder
      */
     public function from($table = null, $alias = null)
     {
@@ -63,8 +70,9 @@ class QueryBuilder
      *
      * set table name
      *
-     * @param string $name
-     * @return $this
+     * @param string $table
+     * @param string $alias = null
+     * @return QueryBuilder
      */
     public function table($table, $alias = null)
     {
@@ -129,6 +137,9 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function count()
     {
         $this->select
@@ -148,7 +159,7 @@ class QueryBuilder
     /**
      * fetch all the rows on the given table
      *
-     * @return void
+     * @return array
      */
     public function all()
     {
@@ -156,6 +167,10 @@ class QueryBuilder
         return $this->stmt->setQuery($this->select->__toString())->fetchAll();
     }
 
+    /**
+     * @param mixed ...$columns
+     * @return QueryBuilder
+     */
     public function groupBy(...$columns)
     {
         $this->select->groupBy(new GroupBy(...$columns));
@@ -278,7 +293,7 @@ class QueryBuilder
      * records the given data on the given table
      *
      * @param array $data
-     * @return void
+     * @return array|string
      */
     public function create($data = [])
     {
@@ -286,6 +301,11 @@ class QueryBuilder
         return $this->stmt->setQuery("$insert")->execute($insert->params());
     }
 
+    /**
+     * @param string $column
+     * @param string $type
+     * @return QueryBuilder
+     */
     public function orderBy($column, $type = null)
     {
         if (!$this->orderBy) {
@@ -298,6 +318,10 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * @param array $data
+     * @return array|string
+     */
     public function update($data = [])
     {
         $update = new Update();
@@ -309,14 +333,9 @@ class QueryBuilder
         return $this->stmt->setQuery("$update")->execute($update->params());
     }
 
-    public function raw($sql, $params = [])
-    {
-        $this->sql = $sql;
-        $this->params = $params;
-
-        return $this;
-    }
-
+    /**
+     * @return array|string
+     */
     public function delete()
     {
         $delete = new Delete();

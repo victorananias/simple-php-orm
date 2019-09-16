@@ -28,7 +28,7 @@ class Select implements Queriable
      * sets the table for the select
      *
      * @param string $table
-     * @return void
+     * @return Select
      */
     public function from($table, $alias = null)
     {
@@ -49,7 +49,7 @@ class Select implements Queriable
     }
 
     /**
-     * receibes group by
+     * receives group by
      *
      * @param GroupBy $groupBy
      */
@@ -72,7 +72,7 @@ class Select implements Queriable
      * receives the OrderBy class
      *
      * @param OrderBy $orderBy
-     * @return void
+     * @return Select
      */
     public function orderby(OrderBy $orderBy)
     {

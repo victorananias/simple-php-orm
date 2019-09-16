@@ -123,7 +123,7 @@ class QueryBuilderTest extends TestCase
         $result = $this->db()->toSql()->table('mytable')->create([
             'name' => 'this is the name',
             'type' => 'test'
-        ]);
+        ]); 
 
         $this->assertEquals('insert into mytable(name, type) values(?, ?)', $result['query']);
         $this->assertCount(2, $result['params']);
