@@ -353,4 +353,16 @@ class QueryBuilder
         $delete->from($this->table)->where($this->where);
         return $this->stmt->setQuery("$delete")->execute($delete->params());
     }
+
+    /**
+     * @param string $sql
+     * @return array
+     */
+    public function raw($sql, $params = [])
+    {
+        $this->sql = $sql;
+        $this->params = $params;
+
+        return $this;
+    }
 }

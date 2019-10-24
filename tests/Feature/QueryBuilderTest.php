@@ -196,6 +196,16 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(4, $result['params']);
     }
 
+
+    /** @test */
+    public function it_allows_raw_queries()
+    {
+        $result = $this->db()->toSql()->raw('select * from mytb where id = ?', [ 2 ])->get();
+
+        $this->assertEquals('select * from mytb where id = ?', $result['query']);
+        $this->assertCount(1, $result['params']);
+    }
+
     private function db()
     {
         return new QueryBuilder(new PDO($this->dsn));
