@@ -101,6 +101,32 @@ class QueryBuilder
     }
 
     /**
+     * add where in conditions
+     *
+     * @param string $column
+     * @param array $array
+     * @return QueryBuilder
+     */
+    public function whereIn($column, $array = [])
+    {
+        $this->where->add($column, 'in', $array);
+        return $this;
+    }
+
+    /**
+     * add where not in conditions
+     *
+     * @param string $column
+     * @param array $array
+     * @return QueryBuilder
+     */
+    public function whereNotIn($column, $array = [])
+    {
+        $this->where->add($column, 'not in', $array);
+        return $this;
+    }
+
+    /**
      * add where like condition
      *
      * @param string $column

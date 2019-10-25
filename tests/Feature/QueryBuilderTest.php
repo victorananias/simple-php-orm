@@ -65,6 +65,30 @@ class QueryBuilderTest extends TestCase
     }
 
     /** @test */
+    public function it_selects_with_where_in_conditions()
+    {
+        $result = $this->db()->toSql()
+            ->from('mytable')
+            ->whereIn('id', [2,3])
+            ->get();
+
+        $this->assertEquals($result['query'], 'select * from mytable where id in (?, ?)');
+        $this->assertCount(2, $result['params']);
+    }
+
+    /** @test */
+    public function it_selects_with_where_not_in_conditions()
+    {
+        $result = $this->db()->toSql()
+            ->from('mytable')
+            ->whereNotIn('id', [2,3])
+            ->get();
+
+        $this->assertEquals($result['query'], 'select * from mytable where id not in (?, ?)');
+        $this->assertCount(2, $result['params']);
+    }
+
+    /** @test */
     public function it_joins_selects()
     {
         $result = $this->db()->toSql()
@@ -104,7 +128,7 @@ class QueryBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_accepts_unordered_functions_when_selecting()
+    public function it_accepts_random_functions_call_when_selecting()
     {
         $result = $this->db()->toSql()
             ->where('id', '!=', 2)
@@ -156,7 +180,7 @@ class QueryBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_limits()
+    public function it_limits_selects()
     {
         $result = $this->db()->toSql()->from('mytb')->limit(2)->get();
         $this->assertEquals('select top 2 * from mytb', $result['query']);
