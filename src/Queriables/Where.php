@@ -19,8 +19,17 @@ class Where implements Queriable
         }
 
         if (count($data) == 3) {
-            $this->conditions[] = "{$data[0]} {$data[1]} ?";
-            $this->params[] = $data[2];
+            
+            if (is_array($data[2])) {
+                $val = substr(str_repeat('?, ', count($data[2])), 0, -2);
+                $val = "({$val})";
+                $this->params = array_merge($this->params, $data[2]);
+            } else {
+                $val = '?';
+                $this->params[] = $data[2];
+            }
+
+            $this->conditions[] = "{$data[0]} {$data[1]} {$val}";
         }
     }
 

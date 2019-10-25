@@ -35,7 +35,6 @@ class WhereTest extends TestCase
         $this->assertCount(1, $where->params());
     }
 
-
     /** @test */
     public function it_accepts_an_array_of_conditions()
     {
@@ -52,7 +51,7 @@ class WhereTest extends TestCase
         $this->assertCount(3, $where->params());
     }
 
-    public function testEmpty()
+    public function it_checks_whether_a_condition_exists()
     {
         $where = new Where();
 
@@ -60,7 +59,7 @@ class WhereTest extends TestCase
         $this->assertCount(0, $where->params());
     }
 
-    public function testIsNull()
+    public function it_allows_where_is_null_conditions()
     {
         $where = new Where();
 
@@ -80,5 +79,29 @@ class WhereTest extends TestCase
 
         $this->assertEquals('id = ? and product_id = ?', $where->conditions());
         $this->assertCount(2, $where->params());
+    }
+
+    /** @test */
+    public function it_allows_where_in_coditions()
+    {
+        $where = new Where();
+
+        $where->add('id', 'in', [2, 3, 4]);
+        $where->add('product_id', 2);
+
+        $this->assertEquals('id in (?, ?, ?) and product_id = ?', $where->conditions());
+        $this->assertCount(4, $where->params());
+    }
+
+    /** @test */
+    public function it_allows_where_not_in_coditions()
+    {
+        $where = new Where();
+
+        $where->add('id', 'not in', [2, 3, 4]);
+        $where->add('product_id', 2);
+
+        $this->assertEquals('id not in (?, ?, ?) and product_id = ?', $where->conditions());
+        $this->assertCount(4, $where->params());
     }
 }
