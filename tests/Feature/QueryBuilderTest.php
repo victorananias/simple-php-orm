@@ -52,7 +52,7 @@ class QueryBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_selects_with_where_conditions()
+    public function it_selects_using_where_conditions()
     {
         $result = $this->db()->toSql()
             ->from('mytable')
@@ -65,7 +65,19 @@ class QueryBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_selects_with_where_in_conditions()
+    public function it_selects_using_where_not_like_conditions()
+    {
+        $result = $this->db()->toSql()
+            ->from('mytable')
+            ->where('name', 'not like', 'test')
+            ->first();
+
+        $this->assertEquals($result['query'], 'select top 1 * from mytable where name not like ?');
+        $this->assertCount(1, $result['params']);
+    }
+
+    /** @test */
+    public function it_selects_using_where_in_conditions()
     {
         $result = $this->db()->toSql()
             ->from('mytable')
@@ -77,7 +89,7 @@ class QueryBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_selects_with_where_not_in_conditions()
+    public function it_selects_using_where_not_in_conditions()
     {
         $result = $this->db()->toSql()
             ->from('mytable')

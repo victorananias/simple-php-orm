@@ -17,22 +17,21 @@ use SimpleORM\Queriables\Limit;
 
 class QueryBuilder
 {
-    protected $pdo;
+    public $select;
 
+    protected $pdo;
     protected $table;
     protected $tableAlias;
     protected $sql = '';
-
     protected $stmt;
     protected $where;
-    public $select;
     protected $orderBy;
     protected $joins = [];
 
     protected $limit = null;
     protected $params = [];
 
-    public function __construct(PDO $pdo)
+    public function __construct(PDO $pdo = null)
     {
         $this->pdo = $pdo;
 
@@ -136,6 +135,19 @@ class QueryBuilder
     public function whereLike($column, $value)
     {
         $this->where->add($column, 'like', $value);
+        return $this;
+    }
+
+    /**
+     * add where not like condition
+     *
+     * @param string $column
+     * @param string $value
+     * @return QueryBuilder
+     */
+    public function whereNotLike($column, $value)
+    {
+        $this->where->add($column, 'not like', $value);
         return $this;
     }
 
@@ -298,28 +310,11 @@ class QueryBuilder
         return $this;
     }
 
-    private function checkJoinParams($join, $params)
-    {
-        if (count($params) == 2) {
-            $params[1]($join);
-        }
-
-        if (count($params) == 3) {
-            $join->on($params[1], $params[2]);
-        }
-
-        if (count($params) == 4) {
-            $join->on($params[1], $params[2], $params[3]);
-        }
-
-        return $join;
-    }
-
     /**
      * records the given data on the given table
      *
      * @param array $data
-     * @return array|string
+     * @return int
      */
     public function create($data = [])
     {
@@ -346,7 +341,7 @@ class QueryBuilder
 
     /**
      * @param array $data
-     * @return array|string
+     * @return int|null
      */
     public function update($data = [])
     {
@@ -361,7 +356,7 @@ class QueryBuilder
 
     /**
      * @param array $data
-     * @return array|string
+     * @return int|null
      */
     public function insert($data = [])
     {
@@ -371,7 +366,7 @@ class QueryBuilder
     }
 
     /**
-     * @return array|string
+     * @return null
      */
     public function delete()
     {
@@ -382,7 +377,7 @@ class QueryBuilder
 
     /**
      * @param string $sql
-     * @return array
+     * @return QueryBuilder $this
      */
     public function raw($sql, $params = [])
     {
@@ -390,5 +385,22 @@ class QueryBuilder
         $this->params = $params;
 
         return $this;
+    }
+
+    private function checkJoinParams($join, $params)
+    {
+        if (count($params) == 2) {
+            $params[1]($join);
+        }
+
+        if (count($params) == 3) {
+            $join->on($params[1], $params[2]);
+        }
+
+        if (count($params) == 4) {
+            $join->on($params[1], $params[2], $params[3]);
+        }
+
+        return $join;
     }
 }

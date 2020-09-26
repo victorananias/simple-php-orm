@@ -19,7 +19,7 @@ class Statement
      * set the current mode as test
      *
      * @param bool $value
-     * @return $this
+     * @return Statement $this
      */
     public function setToSql($value = true)
     {
@@ -31,7 +31,7 @@ class Statement
      * set query attribute
      *
      * @param string $query
-     * @return $this
+     * @return Statement $this
      */
     public function setQuery(string $query)
     {
