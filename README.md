@@ -1,5 +1,5 @@
 # Simple PHP ORM
-Another PHP ORM build for querying on SQL Server.
+Another PHP ORM build for querying SQL Server.
 
 * Testing
 * OOP
@@ -7,4 +7,4 @@ Another PHP ORM build for querying on SQL Server.
 
 ## Getting Started
 
-- look at the `example.php` file to see how to implement this ORM
+- look at the `example.php` file to see how to use
